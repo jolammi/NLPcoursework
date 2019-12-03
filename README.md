@@ -54,3 +54,12 @@ and ROUGE-3 performances.
 (or a link / pointer to the location of the original document) and output the summary 
 according to each of the aforementioned methodologies.
 
+-----------------
+## Käännös parhaan ymmärryksemme mukaan
+
+Projekti 10: Tekstin tiivistys 1
+
+Projektin tarkoitus on kehittää uusia keinoja automaattiseen tekstin
+tiivistämiseen ja testata niiden toimivuutta pienellä datasetillä.
+ROUGE-N metriikka on standardi tekstin tiivistämisen arvioinnissa.
+
