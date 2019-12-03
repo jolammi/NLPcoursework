@@ -61,5 +61,5 @@ Projekti 10: Tekstin tiivistys 1
 
 Projektin tarkoitus on kehittää uusia keinoja automaattiseen tekstin
 tiivistämiseen ja testata niiden toimivuutta pienellä datasetillä.
-ROUGE-N metriikka on standardi jonkin arvioinnissa.
+ROUGE-N metriikka on standardi tekstin tiivistämisen arvioinnissa.
 
