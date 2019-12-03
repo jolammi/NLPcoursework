@@ -92,3 +92,16 @@ herkemmin lauseita alkuperäisestä tekstistä, joissa on on sama named-entity.
 Aja parannetut algoritmit samalle datasetille, ja raportoi toimintaa kuten aiemmin.
 
 5.  Toteuta sama GUI uusille algoritmeille.
+
+-----------------
+
+## Project assignment
+Project 8. Co-referencing Textual Analysis
+
+1.  Consider a simple co-reference example as in the following: “The students like doing their exercises because they are aware of the benefits later on, especially with Finland increasing demand in job market”. Use NLTK parser tree to identify and visualize the penn-treebank tags associated to various token of the above sentence.
+
+2.  We are only interested in coreference resolution associated to pronoun-name association. For instance, in the above example we should be able to associate pronoun “they” to noun “student”. For this purpose, we will initially look at this coreference resolution as a matching problem. For instance, in the above example, we realize that “they” stands for plural form, so can only be associated with nouns in plural forms either in the same sentence or sentence just before it. So, one can identify all  nouns and named-entities in the sentence and check those situated before the pronoun “they”, we then assign to the pronoun to the name/named-entity that fits some commonsense reasoning (explained in subsequent tasks).
+
+3.  For this purpose, implement an example that would allow you to identify named-entities from a given text. You can use SpaCy named-entity tagger for instance. You can inspire from implementation available at https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da.
+
+4.  Consider the following features that you should implement in your program. The feature assigns a value for a pair of words (i, j) of the document.
