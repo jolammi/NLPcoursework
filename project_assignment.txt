@@ -1,10 +1,3 @@
-# NLPcoursework
-A repo for the course project on course 521158S Natural Language Processing and Text Mining at University of Oulu.
-
------------------
-    
-
-## Project assignment
 Project 10: Automatic Text Summarization 1
 
 
