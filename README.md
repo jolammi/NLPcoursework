@@ -79,5 +79,14 @@ keinolla.
 käytössä kun verrataan automaattista ja manuaalista tiivistystä. Käytä
 CNN/Dailymail datasettia täältä https://github.com/morningmoni/FAR.
 Käytä Rouge2 ja Rouge3 metriikoita näiden kolmen tiivistäjän
-arviointiin kyseisellä datasetillä. Kommentoi algoritmien suorituskykyä
-ja rajoitetteita.
+arviointiin kyseisellä datasetillä. Kommentoi näiden algoritmien
+suorituskykyä ja rajoitetteita.
+
+4.  Haluamme laajentaa ylläolevaa tiivistelmää ottamalla mukaan
+tekstin koherenssin named-entityjen mukaan. Tähän tarkoitukseen
+käytä spaCy named-entity taggeria ja identifioi henkilöt ja organisaatiot.
+Ehdota yksinkertaista heuristiikka, joka tutkii onko algoritmin tuloksena
+olleessa lauseessa jokin named-entity. Jos on, niin jollain raja-arvolla
+otetaan mukaan alkuperäisestä tekstista muita lauseita, joissa on sama
+named-entity.
+
