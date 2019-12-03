@@ -75,4 +75,9 @@ filuilla. Demoa tämän jälkeen omilla teksteillä.
 dokumentista, joka tiivistetään. Outputtina tiivistelmä kolmella eri
 keinolla.
 
-3.  asd
+3.  Arvioi näitä kolmea tiivistäjää. Rouge2 ja Rouge3 on tyypillisesti
+käytössä kun verrataan automaattista ja manuaalista tiivistystä. Käytä
+CNN/Dailymail datasettia täältä https://github.com/morningmoni/FAR.
+Käytä Rouge2 ja Rouge3 metriikoita näiden kolmen tiivistäjän
+arviointiin kyseisellä datasetillä. Kommentoi algoritmien suorituskykyä
+ja rajoitetteita.
