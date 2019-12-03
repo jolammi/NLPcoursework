@@ -94,6 +94,8 @@ Aja parannetut algoritmit samalle datasetille, ja raportoi toimintaa kuten aiemm
 5.  Toteuta sama GUI uusille algoritmeille.
 
 -----------------
+-----------------
+-----------------
 
 ## Project assignment
 Project 8. Co-referencing Textual Analysis
@@ -123,3 +125,8 @@ Project 8. Co-referencing Textual Analysis
 
 
 8.  Write down an interface that allows you to enter a website or copy and past text and generate coreference resolution output using i) the approach in 6) and ii) Neural coreference resolution.
+
+-----------------
+## Käännös parhaan ymmärryksemme mukaan
+
+Projekti 8. Sisäviittausten (co-reference) tekstuaalinen analyysi
