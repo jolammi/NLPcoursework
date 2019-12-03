@@ -10,7 +10,7 @@ Project 10: Automatic Text Summarization 1
 
 This project aims to implement new approaches for automatic text summarization
 and evaluate their performances on small sample dataset. The Rouge-N metric is 
-the standard in evaluating the text summarization tasks
+the standard in evaluating the
 
 1.	First, study the open text summarization available in 
 https://github.com/jaijuneja/PyTLDR It uses an extraction based summarization 
@@ -63,3 +63,16 @@ Projektin tarkoitus on kehittää uusia keinoja automaattiseen tekstin
 tiivistämiseen ja testata niiden toimivuutta pienellä datasetillä.
 ROUGE-N metriikka on standardi tekstin tiivistämisen arvioinnissa.
 
+1.  Ensimmäisenä tutki open sauce tekstin tiivistäjää 
+https://github.com/jaijuneja/PyTLDR. Se pisteyttää lauseet ja ottaa
+mukaan tiivistelmään isoimmat pisteet saaneet. PyTLDR sisältää kolme
+tiivistäjää jotka ovat: textRank algoritmi (käyttää pagerankkia), latent
+semantic analysis, ja relevance sentence scoring joka käyttää cosine
+similarity:ä. Tarkista että nämä kolme toimii plaintekstillä ja HTML
+filuilla. Demoa tämän jälkeen omilla teksteillä.
+
+2.  Suunnittele simppeli GUI johon voi laittaa linkin source filun
+dokumentista, joka tiivistetään. Outputtina tiivistelmä kolmella eri
+keinolla.
+
+3.  asd
