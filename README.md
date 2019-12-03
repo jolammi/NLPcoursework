@@ -88,5 +88,7 @@ käytä spaCy named-entity taggeria ja identifioi henkilöt ja organisaatiot.
 Ehdota yksinkertaista heuristiikka, joka tutkii valmista tiivistelmää käyden
 läpi sen jokaisen lauseen. Jos jossain tiivistelmän lauseissa on nimetty enti-
 teetti, niin muuta algortimia jollain thresholdilla ottamaan mukaan
-herkemmin lauseita alkuperäisestä tekstistä, joissa on on sama named-entity
+herkemmin lauseita alkuperäisestä tekstistä, joissa on on sama named-entity.
+Aja parannetut algoritmit samalle datasetille, ja raportoi toimintaa kuten aiemmin.
 
+5.  Toteuta sama GUI uusille algoritmeille.
