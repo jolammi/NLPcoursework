@@ -10,7 +10,7 @@ Project 10: Automatic Text Summarization 1
 
 This project aims to implement new approaches for automatic text summarization
 and evaluate their performances on small sample dataset. The Rouge-N metric is 
-the standard in evaluating the
+the standard in evaluating the text summarization tasks
 
 1.	First, study the open text summarization available in 
 https://github.com/jaijuneja/PyTLDR It uses an extraction based summarization 
