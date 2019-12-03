@@ -110,6 +110,8 @@ Project 8. Co-referencing Textual Analysis
 
 4.  Consider the following features that you should implement in your program. The feature assigns a value for a pair of words (i, j) of the document.
 
+    <img src="./images/table1.png" width="424" height="249"/>
+    table1
 
 5.  Implement a simple coreference resolution rule that says that if a word is a pronoun then finds the noun or named-entity of the same type (plural/singular, masculine/feminine situated on the same sentence of the pronoun but before the occurrence of the pronoun. If none is found on that sentence, then look to the previous sentence. If more than one name/named-entity matches the pronoun, then assign to the name/named-entity situated closest (in terms of number of words) to the pronoun. Make use of appropriate features in Table 1 for this reasoning.
 
