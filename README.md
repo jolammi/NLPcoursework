@@ -86,7 +86,7 @@ suorituskykyä ja rajoitetteita.
 tekstin koherenssin named-entityjen mukaan. Tähän tarkoitukseen
 käytä spaCy named-entity taggeria ja identifioi henkilöt ja organisaatiot.
 Ehdota yksinkertaista heuristiikka, joka tutkii onko algoritmin tuloksena
-olleessa lauseessa jokin named-entity. Jos on, niin jollain raja-arvolla
+olleessa lauseessa jokin named-entity. Jos ei ole, niin jollain raja-arvolla
 otetaan mukaan alkuperäisestä tekstista muita lauseita, joissa on sama
 named-entity.
 
