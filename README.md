@@ -85,8 +85,8 @@ suorituskykyä ja rajoitetteita.
 4.  Haluamme laajentaa ylläolevaa tiivistelmää ottamalla mukaan
 tekstin koherenssin named-entityjen mukaan. Tähän tarkoitukseen
 käytä spaCy named-entity taggeria ja identifioi henkilöt ja organisaatiot.
-Ehdota yksinkertaista heuristiikka, joka tutkii onko algoritmin tuloksena
-olleessa lauseessa jokin named-entity. Jos ei ole, niin jollain raja-arvolla
-otetaan mukaan alkuperäisestä tekstista muita lauseita, joissa on sama
-named-entity.
+Ehdota yksinkertaista heuristiikka, joka tutkii valmista tiivistelmää käyden
+läpi sen jokaisen lauseen. Jos jossain tiivistelmän lauseissa on nimetty enti-
+teetti, niin muuta algortimia jollain thresholdilla ottamaan mukaan
+herkemmin lauseita alkuperäisestä tekstistä, joissa on on sama named-entity
 
