@@ -160,8 +160,3 @@ Projekti 8. Sisäviittausten (co-reference) tekstuaalinen analyysi
 
 
 8.  Implementoi GUI, johon voi pastea linkin tai tekstiä ja generoida sisäviittaukset käyttäen kohtaa 6) ja Neural coreference resolutinia kohdasta 7)
-
-
-----------
-
-for i in nltk.pos_tag(nltk.word_tokenize("The students like doing their exercises because they are aware of the benefits later on, especially with Finland increasing demand in job market")):print(i)
