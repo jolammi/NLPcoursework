@@ -142,8 +142,21 @@ Projekti 8. Sisäviittausten (co-reference) tekstuaalinen analyysi
 2.  Meitä kiinnostaa vain pronominimien ja nimien välinen yhteys sisäviittausten suhteen. Esimerkiksi, ylläolevassa esimerkissä meidän pitäisi pystyä liittää pronomini "they" substantiiviin "student". Tätä tarkoitusta varten sisäviittausten ratkaisua käsitellään aluksi matching-problem:ina. Esimerkiksi ylläolevassa "they" on monikko, joten se voi liittyä monikko substanttiiviin samassa tai aiemmassa lauseessa. Joten, identifioidaan kaikki substanttiivit ja named-entityt lauseessa ja tutkitaan niitä jotka esiintyy ennen "they":tä. Tämän jälkeen liitämme pronominin named-entityyn, joka on järkeenkäypä (selitetään myöhemmin)
 
 
+3.  Tätä tarkoitusta varten imolementoi esimerkki joka mahdollistaa named-entityjen tunnistamisen annetusta tekstistä. Voit käyttää SpaCy-named-entity taggeria. Voit inspiroitua implementoinnista osoitteessa:  https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da.
+
+4. Ota huomioon seuraavat ominaisuudet jotka sinun tulee implementoida omaan ohjelmaasi. Ominaisuus antaa sanaparille (i, j) arvon dokumentissa.
+
+    <img src="./images/table1.png" width="424" height="249"/>
+    table1
+    
+    
+5.  Implementoi yksinkertainen sisäviittausratkaisusääntö, joka kertoo onko sana pronomini vai ei, ja jos on, löytää samantyyppisen (monikko/yksikkö, femiini, maskuliininen) substantiivin tai named-entityn lauseesta kuin pronomini. Jos samasta lauseesta ei löydy yhtään, se etsii edellisestä lauseesta. Jos useampi kuin yksi nimi tai named-entity täsmää pronominiin, niin liitä lähimpänä olevaan sanoissa laskien. Käytä taulukkoa 1 (yläpuolella).
 
 
-3.  For this purpose, implement an example that would allow you to identify named-entities from a given text. You can use SpaCy named-entity tagger for instance. You can inspire from implementation available at https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da.
+6.  Käytä edellä ollutta linkkiä, jossa käytetään bs4:ää analysoimaan valittua BBC sivua ja löytämään sisäviittaukset. Arvioi käsin ja raportoi automaattisen sisäviittausten selvittämisen tuloksia ja tarkkuutta. Kommentoi kyseisen lähestymistavan rajoitteita.
 
-3.  asd
+
+7.  Implementoi Neural Coreference resolution linkistä: https://github.com/huggingface/neuralcoref ja tsekkaa tulokset käyttäen kohdan 6 BBC sivua.
+
+
+8.  Implementoi GUI, johon voi pastea linkin tai tekstiä ja generoida sisäviittaukset käyttäen kohtaa 6) ja Neural coreference resolutinia kohdasta 7)
