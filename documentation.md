@@ -31,4 +31,5 @@ for i in nltk.pos_tag(nltk.word_tokenize(teksti)):print(i)
 ('job', 'NN')
 ('market', 'NN')
 '''
+
 ```
