@@ -140,3 +140,10 @@ Projekti 8. Sisäviittausten (co-reference) tekstuaalinen analyysi
 
 
 2.  Meitä kiinnostaa vain pronominimien ja nimien välinen yhteys sisäviittausten suhteen. Esimerkiksi, ylläolevassa esimerkissä meidän pitäisi pystyä liittää pronomini "they" substantiiviin "student". Tätä tarkoitusta varten sisäviittausten ratkaisua käsitellään aluksi matching-problem:ina. Esimerkiksi ylläolevassa "they" on monikko, joten se voi liittyä monikko substanttiiviin samassa tai aiemmassa lauseessa. Joten, identifioidaan kaikki substanttiivit ja named-entityt lauseessa ja tutkitaan niitä jotka esiintyy ennen "they":tä. Tämän jälkeen liitämme pronominin named-entityyn, joka on järkeenkäypä (selitetään myöhemmin)
+
+
+
+
+3.  For this purpose, implement an example that would allow you to identify named-entities from a given text. You can use SpaCy named-entity tagger for instance. You can inspire from implementation available at https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da.
+
+3.  asd
