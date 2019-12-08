@@ -30,7 +30,7 @@ if __name__ == "__main__":
         tagged.append(tokenized)
     visualizer(tagged)
     
-    parser = Parser()
+    parser = Parser() # this parser uses nltk
     tree = parser.parse(teksti)
     tree.draw()
     print(tree)
