@@ -1,4 +1,11 @@
+# python -m spacy download en
+
 import nltk
+from stat_parser import Parser
+
+# clone and install locally
+# python setup.py install --user
+# https://github.com/emilmont/pyStatParser
 
 
 def visualizer(tagged):
@@ -14,23 +21,16 @@ def tagger(text):
 
 teksti = ("The students like doing their exercises because they are "
           "aware of the benefits later on, especially with Finland "
-          "increasingdemand in job market")
+          "increasing demand in job market")
 
 if __name__ == "__main__":
 
     tagged = []
-
     for tokenized in tagger(teksti):
         tagged.append(tokenized)
-    
     visualizer(tagged)
     
-    tree = nltk.chunk.ne_chunk(tagged)
-    
-    print(tree)
+    parser = Parser()
+    tree = parser.parse(teksti)
     tree.draw()
-    
-    juttu = nltk.parse.parse(tagged)
-    
-    
-    # nltk.corpus.treebank_chunk()
+    print(tree)
