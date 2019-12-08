@@ -16,8 +16,9 @@ def visualizer(tagged):
 
 def tagger(text):
     tokenized = nltk.word_tokenize(text)
-    tagged = nltk.pos_tag(tokenized)
-    return tagged
+    pos_tagged = nltk.pos_tag(tokenized)
+    return pos_tagged
+
 
 teksti = ("The students like doing their exercises because they are "
           "aware of the benefits later on, especially with Finland "
