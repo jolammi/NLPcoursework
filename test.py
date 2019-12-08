@@ -1,5 +1,5 @@
 import nltk
-from nltk import chunk
+
 
 def visualizer(tagged):
     for word, tag in tagged:
@@ -22,6 +22,9 @@ if __name__ == "__main__":
     visualizer(tagged)
     
     
-    tree = chunk.ne_chunk(tagged)
+    tree = nltk.chunk.ne_chunk(tagged)
     print(tree)
     tree.draw()
+    
+    
+    nltk.corpus.treebank_chunk
