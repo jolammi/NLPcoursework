@@ -21,10 +21,12 @@ if __name__ == "__main__":
     
     visualizer(tagged)
     
-    
     tree = nltk.chunk.ne_chunk(tagged)
+    
     print(tree)
     tree.draw()
     
+    juttu = nltk.parse.parse(tagged)
     
-    nltk.corpus.treebank_chunk
+    
+    # nltk.corpus.treebank_chunk()
