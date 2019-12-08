@@ -5,8 +5,12 @@ def visualizer(tagged):
     for word, tag in tagged:
         print(word, "("+tag+") ", end="")
     print()
-    
-  
+
+
+def tagger(text):
+    tokenized = nltk.word_tokenize(text)
+    tagged = nltk.pos_tag(tokenized)
+    return tagged
 
 teksti = ("The students like doing their exercises because they are "
           "aware of the benefits later on, especially with Finland "
@@ -16,7 +20,7 @@ if __name__ == "__main__":
 
     tagged = []
 
-    for tokenized in nltk.pos_tag(nltk.word_tokenize(teksti)):
+    for tokenized in tagger(teksti):
         tagged.append(tokenized)
     
     visualizer(tagged)
