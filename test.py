@@ -12,7 +12,7 @@ import webbrowser
 # https://github.com/emilmont/pyStatParser
 
 
-def visualizer(tagged):
+def tagprint(tagged):
     for word, tag in tagged:
         print(word, "("+tag+") ", end="")
     print()
@@ -39,22 +39,23 @@ teksti = ("The students like doing their exercises because they are "
 
 if __name__ == "__main__":
 
+    # tag the given text
     tagged = []
     for tokenized in tagger(teksti):
         tagged.append(tokenized)
-    visualizer(tagged)
     
-    parser = Parser() # this parser uses nltk
-    tree = parser.parse(teksti)
+    # create tree from given text. creates second set of tags also
+    tree = Parser().parse(teksti) # this parser uses nltk
     tree.draw()
-    print(tree)
-
+    
+    # create doc from given text and get named entities from it
     nlp = en_core_web_sm.load()
     doc = nlp(teksti)
-    print([(X.text, X.label_) for X in doc.ents])
-
-    displacy.serve(doc, style='dep')
-
+    named_entities = [(X.text, X.label_) for X in doc.ents]
+    
+    tagprint(tagged)
+    print(tree)
+    print(named_entities)
     webbrowser.get("C:/Program Files/Mozilla Firefox/firefox.exe %s").open("http://localhost:5000")
     
     displacy.serve(doc, style='dep')
