@@ -6,8 +6,7 @@ import spacy  # python -m spacy download en
 from spacy import displacy
 from collections import Counter
 import en_core_web_sm
-import os
-
+import webbrowser
 # clone and install locally
 # python setup.py install --user
 # https://github.com/emilmont/pyStatParser
@@ -49,22 +48,15 @@ if __name__ == "__main__":
     tree = parser.parse(teksti)
     tree.draw()
     print(tree)
-    
-    
 
     nlp = en_core_web_sm.load()
     doc = nlp(teksti)
     print([(X.text, X.label_) for X in doc.ents])
-    
-    os.system("'C:\Program Files\Mozilla Firefox\firefox.exe' google.com")
-    #import subprocess
-    #file = ''C:\Program/ Files\Mozilla/ Firefox\firefox.exe' google.com'
-    #subprocess.call([file])
-    
+
+    displacy.serve(doc, style='dep')
+
+    webbrowser.get("C:/Program Files/Mozilla Firefox/firefox.exe %s").open("http://localhost:5000")
     
     displacy.serve(doc, style='dep')
-    
-
-    
-    #displacy.render(doc, jupyter=False, style='ent')
+    #displacy.serve(doc, style='ent')
 
