@@ -54,7 +54,6 @@ if __name__ == "__main__":
     print([(X.text, X.label_) for X in doc.ents])
 
     displacy.serve(doc, style='dep')
-    
 
     webbrowser.get("C:/Program Files/Mozilla Firefox/firefox.exe %s").open("http://localhost:5000")
     
