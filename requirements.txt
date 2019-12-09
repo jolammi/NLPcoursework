@@ -1,0 +1,5 @@
+pyStatParser==0.0.1  # if fails: pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
+spacy==2.2.3
+nltk==3.4.5
+en-core-web-sm==2.2.5  # python -m spacy download en (after spacy is installed)
+beautifulsoup4==4.8.1
