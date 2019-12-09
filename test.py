@@ -1,7 +1,7 @@
 # python -m spacy download en
 
 import nltk
-from stat_parser import Parser
+from stat_parser import Parser  # pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
 import spacy
 from spacy import displacy
 from collections import Counter
