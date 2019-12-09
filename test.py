@@ -23,12 +23,6 @@ def tagger(text):
     pos_tagged = nltk.pos_tag(tokenized)
     return pos_tagged
 
-
-teksti = ("The students like doing their exercises because they are "
-          "aware of the benefits later on, especially with Finland "
-          "increasing demand in job market")
-
-
 teksti = """Although Murray had privately been thinking he was approaching the end, he had given few clues publicly and that meant a tearful announcement in a pre-tournament news conference at the Australian Open surprised the world.
 Murray said he thought he could get through the pain until Wimbledon and then stop playing, although he also conceded the Grand Slam in Melbourne might be his last tournament.
 Yet on the morning of his planned admission he still had doubts whether he should reveal all.
@@ -38,6 +32,11 @@ Murray describes how he is feeling nervous, anxious and has butterflies in his s
 "When making a decision like that I want my leg to feel really sore," he says.
 That led to doubts. So he calls his physio Shane Annun. "I'm thinking I'm making a mistake," Murray says."""
 
+teksti = ("The students like doing their exercises because they are "
+          "aware of the benefits later on, especially with Finland "
+          "increasing demand in job market")
+
+
 if __name__ == "__main__":
 
     tagged = []
@@ -45,13 +44,16 @@ if __name__ == "__main__":
         tagged.append(tokenized)
     visualizer(tagged)
     
-    #parser = Parser() # this parser uses nltk
-    #tree = parser.parse(teksti)
-    #tree.draw()
-    #print(tree)
+    parser = Parser() # this parser uses nltk
+    tree = parser.parse(teksti)
+    tree.draw()
+    print(tree)
     
     
 
     nlp = en_core_web_sm.load()
     doc = nlp(teksti)
     print([(X.text, X.label_) for X in doc.ents])
+    displacy.serve(doc, style='ent')
+    #displacy.render(doc, jupyter=True, style='ent')
+
