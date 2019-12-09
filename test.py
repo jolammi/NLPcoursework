@@ -2,7 +2,7 @@
 
 import nltk
 from stat_parser import Parser  # pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
-import spacy
+import spacy  # python -m spacy download en
 from spacy import displacy
 from collections import Counter
 import en_core_web_sm
