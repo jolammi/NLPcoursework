@@ -54,6 +54,18 @@ if __name__ == "__main__":
     nlp = en_core_web_sm.load()
     doc = nlp(teksti)
     print([(X.text, X.label_) for X in doc.ents])
-    displacy.serve(doc, style='ent')
-    #displacy.render(doc, jupyter=True, style='ent')
+    
+    import webbrowser
+    firefox_path="C:\Program Files\Mozilla Firefox\firefox.exe"
+    webbrowser.register('firefox', None, webbrowser.BackgroundBrowser(firefox_path))
+    webbrowser.get('firefox').open_new_tab('http://localhost:5000')
+    # "C:\Program Files\Mozilla Firefox\firefox.exe"
+    
+    
+    
+    displacy.serve(doc, style='dep')
+    
+
+    
+    #displacy.render(doc, jupyter=False, style='ent')
 
