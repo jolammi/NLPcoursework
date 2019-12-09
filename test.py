@@ -6,7 +6,6 @@ import spacy  # python -m spacy download en
 from spacy import displacy
 from collections import Counter
 import en_core_web_sm
-import os
 import webbrowser
 # clone and install locally
 # python setup.py install --user
@@ -53,13 +52,6 @@ if __name__ == "__main__":
     nlp = en_core_web_sm.load()
     doc = nlp(teksti)
     print([(X.text, X.label_) for X in doc.ents])
-    
-    os.system("'C:\Program Files\Mozilla Firefox\firefox.exe' google.com")
-    #import subprocess
-    #file = ''C:\Program/ Files\Mozilla/ Firefox\firefox.exe' google.com'
-    #subprocess.call([file])
-
-    webbrowser.get("C:/Program Files/Internet Explorer/iexplore.exe %s").open("http://localhost:5000")
 
     displacy.serve(doc, style='dep')
     
