@@ -1,42 +1,44 @@
-training_personID = exercise_data['training_personID']
-testing_personID = exercise_data['testing_personID']
-
-#Joining training/testing data matrices is done only for mfcc data. 
-
-combined_personID = np.concatenate((training_personID, testing_personID))
-combined_mfcc = np.concatenate((training_data_mfcc, testing_data_mfcc))
-combined_class = np.concatenate((training_class, testing_class))
+### URLISTA artikkelin n:nnen lauseen dep ja ent esitys
 
 
-person_order = np.unique(combined_personID)
-train_data_list = np.zeros((len(person_order), len(combined_personID)-10, 12))
-test_data_list = np.zeros((len(person_order), len(combined_personID)-90, 12))
-train_class_list = np.zeros((len(person_order), len(combined_personID)-10), dtype=int)
-test_class_list = np.zeros((len(person_order), len(combined_personID)-90), dtype=int)
+from bs4 import BeautifulSoup
+import requests
+import re
+import spacy
 
-for i in range(len(person_order)):
-    delete_rows = np.linspace(i*10, i*10+9, 10).astype(int)
-    train_data_list[i,:] = np.delete(combined_mfcc, delete_rows, 0)
-    test_data_list[i,:] = combined_mfcc[delete_rows]
-    train_class_list[i,:] = np.delete(combined_class, delete_rows, 0)
-    test_class_list[i,:] = combined_class[delete_rows]
+import nltk
+from stat_parser import Parser
 
-svms = list()
-for i in range(len(person_order)):
-    svm_training_data = svm.SVC(kernel='poly', degree=3)
-    svm_training_data.fit(train_data_list[i], train_class_list[i])
-    svms.append(svm_training_data)
+from spacy import displacy
+from collections import Counter
+import en_core_web_sm
+nlp = spacy.load("en_core_web_sm")
+
+
+def url_to_string(url):
+    res = requests.get(url)
+    html = res.text
+    soup = BeautifulSoup(html, 'html.parser')
+    for script in soup(["script", "style", 'aside']):
+        script.extract()
+    return " ".join(re.split(r'[\n\t]+', soup.get_text()))
     
-svm_test = np.zeros((len(person_order), 10), dtype=int)
-svm_acc = np.zeros(10)
+    
+ny_bb = url_to_string('https://www.nytimes.com/2018/08/13/us/politics/peter-strzok-fired-fbi.html?hp&action=click&pgtype=Homepage&clickSource=story-heading&module=first-column-region&region=top-news&WT.nav=top-news')
+article = nlp(ny_bb)
+len(article.ents)
 
-for i in range(len(person_order)):
-    svm_test[i] = svms[i].predict(test_data_list[i])
-    svm_acc[i] = accuracy_score(test_class_list[i], svm_test[i])
+##labels = [x.label_ for x in article.ents]
+##Counter(labels)
 
-mean_svm_acc = np.mean(svm_acc)
-sd_sv_acc = np.std(svm_acc)
+##items = [x.text for x in article.ents]
+##Counter(items).most_common(3)
 
-print("Accuracy: ", svm_acc)
-print("Accuracy mean: ", mean_svm_acc)
-print("Accuracy SD: ", sd_sv_acc)
+sentences = [x for x in article.sents]
+print(sentences[20])
+
+
+
+
+##displacy.serve(nlp(str(sentences[20])), style='dep', options = {'distance': 120})
+displacy.serve(nlp(str(sentences[20])), style='ent', options = {'distance': 120})
