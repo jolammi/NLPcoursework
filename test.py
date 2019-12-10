@@ -24,29 +24,43 @@ def tagger(text):
 
 
 if __name__ == "__main__":
+    source = text1
+    
     nlp = en_core_web_sm.load()
-    source = text2
-    sentences = [source] # TODO: logiikka että saadaan N lauseen lista
+    sentences = [token for token in nltk.tokenize.sent_tokenize(source)] # TODO: logiikka että saadaan N lauseen lista. edit: tämä ehkä toimii
 
-    for sentence in sentences:
-        tagged = [tokenized for tokenized in tagger(source)]
-        tree = Parser().parse(source)
-        doc = nlp(source)
+    for index, sentence in enumerate(sentences):
+        print("=====", "parsing sentence", index+1, "of", len(sentences), "=====")
+        
+    
+        tagged = [tokenized for tokenized in tagger(sentence)]
+        tree = Parser().parse(sentence)
+        doc = nlp(sentence)
         named_entities = [(X.text, X.label_) for X in doc.ents]
+        
         
         # show tree structure in tkinter window for the sentence
         tree.draw()
         
+        
         # print tagged text in flat format
         for word, tag in tagged: print(word, "(" + tag + ") ", end="")
+        
         
         # print tagged text in tree format (different tags than above!)
         print(tree)
         
+        
         # dump named entities from the sentence
         print(named_entities)
         
+        
         # visualize connections between words in the sentence in browser
         browser = "C:/Program Files/Mozilla Firefox/firefox.exe %s"
+        print("ctrl+c to continue by closing the server")
         webbrowser.get(browser).open("http://localhost:5000")
-        displacy.serve(doc, style="dep") # or style="ent"
+        try:
+            displacy.serve(doc, style="dep") # or style="ent"
+        except KeyboardInterrupt:
+            pass # allow breaking the server quickly
+        print("=====", "server closed. finished parsing:", index+1, "of", len(sentences), "=====")
