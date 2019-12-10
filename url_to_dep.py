@@ -24,7 +24,7 @@ def url_to_string(url):
     return " ".join(re.split(r'[\n\t]+', soup.get_text()))
     
     
-ny_bb = url_to_string('https://www.nytimes.com/2018/08/13/us/politics/peter-strzok-fired-fbi.html?hp&action=click&pgtype=Homepage&clickSource=story-heading&module=first-column-region&region=top-news&WT.nav=top-news')
+ny_bb = url_to_string("https://www.nytimes.com/2019/12/09/us/politics/fbi-ig-report-russia-investigation.html")
 article = nlp(ny_bb)
 len(article.ents)
 
@@ -34,11 +34,11 @@ len(article.ents)
 ##items = [x.text for x in article.ents]
 ##Counter(items).most_common(3)
 
-sentences = [x for x in article.sents]
-print(sentences[20])
+sentences = [x.text for x in article.sents]
+print("".join(str(sentences)))
 
 
 
 
 ##displacy.serve(nlp(str(sentences[20])), style='dep', options = {'distance': 120})
-displacy.serve(nlp(str(sentences[20])), style='ent', options = {'distance': 120})
+displacy.serve(nlp(str(sentences)), style='ent', options = {'distance': 120})
