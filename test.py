@@ -1,25 +1,21 @@
-# python -m spacy download en
-
 import nltk
-from stat_parser import (
-    Parser,
-)  # pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
-import spacy  # python -m spacy download en
-from spacy import displacy
-import en_core_web_sm
+import spacy
 import webbrowser
+import en_core_web_sm
+from spacy import displacy
+from stat_parser import Parser
 from text_files import text1, text2
 
-# clone and install locally
+
+# installation notes for libraries
+#
+# clone and install pystatparser locally:
 # python setup.py install --user
 # https://github.com/emilmont/pyStatParser
-
-
-def tagprint(tagged):
-    for word, tag in tagged:
-        print(word, "(" + tag + ") ", end="")
-    print()
-
+# or use the following
+# pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
+#
+# import spacy  # use following for library: python -m spacy download en
 
 def tagger(text):
     tokenized = nltk.word_tokenize(text)
@@ -28,31 +24,29 @@ def tagger(text):
 
 
 if __name__ == "__main__":
-
-    # tag the given text
-    tagged = []
-    for tokenized in tagger(text2):
-        tagged.append(tokenized)
-
-    # create tree from given text. creates second set of tags also
-
-    print("ok")
-    tree = Parser().parse(text2)  # this parser uses nltk
-    # tree.draw()
-
-    print("ok")
-
-    # create doc from given text and get named entities from it
     nlp = en_core_web_sm.load()
-    doc = nlp(text2)
-    named_entities = [(X.text, X.label_) for X in doc.ents]
+    source = text2
+    sentences = [source] # TODO: logiikka että saadaan N lauseen lista
 
-    tagprint(tagged)
-    print(tree)
-    print(named_entities)
-    webbrowser.get("C:/Program Files/Mozilla Firefox/firefox.exe %s").open(
-        "http://localhost:5000"
-    )
-
-    displacy.serve(doc, style="dep")
-    # displacy.serve(doc, style='ent')
+    for sentence in sentences:
+        tagged = [tokenized for tokenized in tagger(source)]
+        tree = Parser().parse(source)
+        doc = nlp(source)
+        named_entities = [(X.text, X.label_) for X in doc.ents]
+        
+        # show tree structure in tkinter window for the sentence
+        tree.draw()
+        
+        # print tagged text in flat format
+        for word, tag in tagged: print(word, "(" + tag + ") ", end="")
+        
+        # print tagged text in tree format (different tags than above!)
+        print(tree)
+        
+        # dump named entities from the sentence
+        print(named_entities)
+        
+        # visualize connections between words in the sentence in browser
+        browser = "C:/Program Files/Mozilla Firefox/firefox.exe %s"
+        webbrowser.get(browser).open("http://localhost:5000")
+        displacy.serve(doc, style="dep") # or style="ent"
