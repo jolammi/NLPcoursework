@@ -59,6 +59,10 @@ def html_to_text(html):
     h.ignore_images = True
     return h.handle(html)
     
+def parse_body_text_from_text_version(text):
+    text = text.split("\n")
+    print(text)
+
 
 
 
@@ -66,4 +70,5 @@ link = "https://www.bbc.com/news/world-asia-50723352"
 # link = "https://www.nytimes.com/2019/12/09/us/politics/fbi-ig-report-russia-investigation.html"
 html = get_html_file(link)
 text = html_to_text(html)
-print(text)
+parse_body_text_from_text_version(text)
+# print(text)
