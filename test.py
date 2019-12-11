@@ -5,6 +5,7 @@ import en_core_web_sm
 from spacy import displacy
 from stat_parser import Parser
 from text_files import text1, text2
+from parse_url_to_text import parse_body_text_from_url
 
 
 # installation notes for libraries
