@@ -81,10 +81,16 @@ if __name__ == "__main__":
     
     wholetext = TextContainer(source)
 
-    seapie()
+
     wholetext.sentences[4].words[4]
 
-        
+    for sentence_i in wholetext.sentences.keys():
+        for word_i in wholetext.sentences[sentence_i].words.keys():
+            print(wholetext.sentences[sentence_i].words[word_i])
+            input()
+            
+    seapie()
+    
     # for index, sentence in enumerate(sentences):
 
         # print("======")
