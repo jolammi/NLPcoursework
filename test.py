@@ -12,7 +12,7 @@ the relations that will be parsed are;
  +------+------------+--[type here]-----------+
  |      |            |                        |
  v      v            v                        |
-noun, proper noun, named entity  ... ... ...pronoun
+noun, proper noun, named entity ... ... ...pronoun
 
 """
 
@@ -48,51 +48,47 @@ class TextContainer:
     whole text in its classified form for further processing
     """
 
-    class Sentence:
+    class SentenceContainer:
         """container class for holding a single sentences's text in its
         classified form for further processing
         """
         
         def __init__(self, sentence):
-            self.doc = nlp(sentence)
+            self.doc = nlp(sentence) # the base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
-            self.tags = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+
+            self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
 
 
-
-            # TODO tee indexi yhden sentence sisälle, jotta textcontainerin initin self.connections rakenne voi toimia
 
     def __init__(self, plaintext):
         self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
-        self.sentences = {index: Sentence(i) for (index, sentence) in enumerate(self.plain_sentences)}
+        self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
         
-        self.connections = [] # this should contain connections between sentences in the following format:
-        # alku TextContainer indenxi
-        # alku Sentence indenxi
-        # loppu TextContainer indexi
-        # loppu Sentence indenxi
-
-
-
-
-
-
-
+        self.connections = []
+        # from TextContainer index, from SentenceContainer index
+        # to TextContainer index, to SentenceContainer index
+        #
+        # example: the word "He" should point to "Jouni" in the below sentence:
+        # "Jouni has a headache. He thusly ingested 50mg theanine and 200mg caffeine"
+        # this is saved as [ ... , ((1, 0), (0, 0)) , ...] which stands for
+        # pointing from first word of second sentence to first word of first sentence.
 
 
 
 if __name__ == "__main__":
     source = pronoun_text
     
-    nlp = en_core_web_sm.load()
-    sentences = [token for token in nltk.tokenize.sent_tokenize(source)]
+    wholetext = TextContainer(source)
 
-    for index, sentence in enumerate(sentences):
+    seapie()
+    wholetext.sentences[4].words[4]
 
         
-        print(doc)
-        print("======")
-        print(named_entities)
+    # for index, sentence in enumerate(sentences):
+
+        # print("======")
+        # print(named_entities)
         
         # seapie()
         
@@ -130,8 +126,6 @@ if __name__ == "__main__":
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
-
-
 
 
 
