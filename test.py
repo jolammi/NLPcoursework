@@ -24,7 +24,7 @@ except:
 import nltk
 import spacy
 import webbrowser
-import en_core_web_sm
+import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
 from spacy import displacy
 from stat_parser import Parser
 from text_files import long_text, short_text, pronoun_text
@@ -43,15 +43,27 @@ from parse_url_to_text import parse_body_text_from_url
 
 
 
+class SentenceContainer:
+    """container class for holding a single web page's or such documents
+    whole text in its classified form for further processing
+    """
+    
+    def __init__(self, sentence):
+        self.doc = nlp(sentence)
+        self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
+        self.tags = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+
+
 if __name__ == "__main__":
     source = pronoun_text
     
     nlp = en_core_web_sm.load()
-    sentences = [token for token in nltk.tokenize.sent_tokenize(source)] # TODO: logiikka että saadaan N lauseen lista. edit: tämä ehkä toimii
+    sentences = [token for token in nltk.tokenize.sent_tokenize(source)]
 
     for index, sentence in enumerate(sentences):
         doc = nlp(sentence)
         named_entities = [(X.text, X.label_) for X in doc.ents]
+        tagged = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
         
         print(doc)
         print("======")
