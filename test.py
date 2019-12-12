@@ -24,12 +24,12 @@ except:
 import nltk
 import spacy
 import webbrowser
-import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
 from spacy import displacy
+from pronouns import pronouns
 from stat_parser import Parser
-from text_files import long_text, short_text, pronoun_text
 from parse_url_to_text import parse_body_text_from_url
-
+from text_files import long_text, short_text, pronoun_text
+import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
 
 # installation notes for libraries
 #
@@ -77,19 +77,42 @@ class TextContainer:
 
 
 if __name__ == "__main__":
-    source = pronoun_text
-    
+    # source = pronoun_text
+    source = parse_body_text_from_url("https://www.bbc.com/news/world-europe-50740324")
+        
     wholetext = TextContainer(source)
 
 
     wholetext.sentences[4].words[4]
 
+
+    lippu = False
+
     for sentence_i in wholetext.sentences.keys():
         for word_i in wholetext.sentences[sentence_i].words.keys():
-            print(wholetext.sentences[sentence_i].words[word_i])
+            word, tag = wholetext.sentences[sentence_i].words[word_i]
+            print(sentence_i, word_i, word)
+            
+            
+            if word in pronouns:
+                lippu = True
+                print("---above was pronoun---")
+                
+                
+            for i in wholetext.sentences[sentence_i].nes:
+                if word in i:
+                    print("----above is named entity----")
+                    
+                
+                
+        if lippu:
             input()
+            lippu = False
+
+            # print(wholetext.sentences[sentence_i-1].words[word_i])
             
     seapie()
+
     
     # for index, sentence in enumerate(sentences):
 
