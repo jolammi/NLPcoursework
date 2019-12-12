@@ -6,7 +6,7 @@ import html2text
 nlp = spacy.load("en_core_web_sm")
 
 
-def get_html_file(url):
+def _get_html_file(url):
     if not url.startswith("http"):
         url = "https://" + url
     res = requests.get(url)
@@ -16,7 +16,7 @@ def get_html_file(url):
     return html_page
 
 
-def html_to_text(html):
+def _html_to_text(html):
     # soup = BeautifulSoup(html, features="html.parser")
     # # text = soup.find_all(text=True)
     # blacklist = [
@@ -59,16 +59,61 @@ def html_to_text(html):
     h.ignore_images = True
     return h.handle(html)
     
-def parse_body_text_from_text_version(text):
-    text = text.split("\n")
-    print(text)
+def _parse_body_text_from_text_version(text):
+    text_as_list = text.split("\n")
+    for idx, row in enumerate(text_as_list):
+        if "## related topics" in row.lower():
+            text_as_list = text_as_list[:idx]
+            break
+        if "article share tools" in row.lower():
+            text_as_list = text_as_list[:idx]
+            break
+        # blacklist = [
+        #     "    * ",
+        #     "    * ",
+
+        # ]
+    for idx, row in enumerate(text_as_list):
+        if row.startswith(
+            (
+            "    * ",
+            "Share this with",
+            "  * Share this with"
+        )
+        ):
+            text_as_list.pop(idx)
+    for idx, row in enumerate(text_as_list):
+        if row == text_as_list[idx-2] and row != " " and row != "":
+            print(row)
+            text_as_list = text_as_list[idx:]
+            break
+
+    for idx, row in enumerate(text_as_list):
+        if "Close share panel" in row:
+            text_as_list = text_as_list[idx+3:]
+            break
+    
+    # print(text_as_list)
+    print("\n".join(text_as_list))
+    text = "\n".join(text_as_list)
+    return text
+    # print(text_as_list)
+
+
+def parse_body_text_from_url(link):
+    html = _get_html_file(link)
+    text = _html_to_text(html)
+    text = _parse_body_text_from_text_version(text)
 
 
 
+# link = "https://www.bbc.com/news/world-asia-50723352"
+# link = "https://www.bbc.com/news/live/election-2019-50739883"
+# link = "https://www.bbc.com/news/world-us-canada-50747374"
+# link = "https://www.bbc.com/news/world-asia-50741094"
+# link = "https://www.bbc.com/news/world-europe-50740324"
+# link = "https://www.iltalehti.fi/viihdeuutiset/a/045cb810-1ffd-4641-84d7-4995953a9a4d"
 
-link = "https://www.bbc.com/news/world-asia-50723352"
-# link = "https://www.nytimes.com/2019/12/09/us/politics/fbi-ig-report-russia-investigation.html"
-html = get_html_file(link)
-text = html_to_text(html)
-parse_body_text_from_text_version(text)
+# parse_body_text_from_url(link)
+
 # print(text)
