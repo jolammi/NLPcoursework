@@ -53,6 +53,8 @@ if __name__ == "__main__":
         
         # dump named entities from the sentence
         print(named_entities)
+       
+        
         
         
         # visualize connections between words in the sentence in browser
@@ -60,7 +62,10 @@ if __name__ == "__main__":
         print("ctrl+c to continue by closing the server")
         webbrowser.get(browser).open("http://localhost:5000")
         try:
-            displacy.serve(doc, style="dep") # or style="ent"
+            displacy.serve(doc, style="ent") # or style="ent" or style="dep"
         except KeyboardInterrupt:
             pass # allow breaking the server quickly
         print("=====", "server closed. finished parsing:", index+1, "of", len(sentences), "=====")
+        
+        from seapie import Seapie as seapie
+        seapie()
