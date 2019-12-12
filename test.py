@@ -43,15 +43,42 @@ from parse_url_to_text import parse_body_text_from_url
 
 
 
-class SentenceContainer:
+class TextContainer:
     """container class for holding a single web page's or such documents
     whole text in its classified form for further processing
     """
-    
-    def __init__(self, sentence):
-        self.doc = nlp(sentence)
-        self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
-        self.tags = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+
+    class Sentence:
+        """container class for holding a single sentences's text in its
+        classified form for further processing
+        """
+        
+        def __init__(self, sentence):
+            self.doc = nlp(sentence)
+            self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
+            self.tags = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+
+
+
+            # TODO tee indexi yhden sentence sisälle, jotta textcontainerin initin self.connections rakenne voi toimia
+
+    def __init__(self, plaintext):
+        self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
+        self.sentences = {index: Sentence(i) for (index, sentence) in enumerate(self.plain_sentences)}
+        
+        self.connections = [] # this should contain connections between sentences in the following format:
+        # alku TextContainer indenxi
+        # alku Sentence indenxi
+        # loppu TextContainer indexi
+        # loppu Sentence indenxi
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -61,9 +88,7 @@ if __name__ == "__main__":
     sentences = [token for token in nltk.tokenize.sent_tokenize(source)]
 
     for index, sentence in enumerate(sentences):
-        doc = nlp(sentence)
-        named_entities = [(X.text, X.label_) for X in doc.ents]
-        tagged = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+
         
         print(doc)
         print("======")
