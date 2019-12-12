@@ -97,7 +97,7 @@ def _parse_body_text_from_text_version(text):
             text_as_list.pop(idx)
     for idx, row in enumerate(text_as_list):
         if row == text_as_list[idx-2] and row != " " and row != "":
-            print(row)
+            # print(row)
             text_as_list = text_as_list[idx:]
             break
 
@@ -107,7 +107,7 @@ def _parse_body_text_from_text_version(text):
             break
 
     # print(text_as_list)
-    print("\n".join(text_as_list))
+    # print("\n".join(text_as_list))
     text = "\n".join(text_as_list)
     return text
     # print(text_as_list)
