@@ -94,7 +94,7 @@ if __name__ == "__main__":
         print("======")
         print(named_entities)
         
-        seapie()
+        # seapie()
         
         # =========== OLD MAIN BLOCK BEGIN. DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK BEGIN. DO NOT REMOVE ===========
