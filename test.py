@@ -85,26 +85,19 @@ class TextContainer:
                     window = self.doc[i:(i+window_size)]
                     str_window = [str(tokn) for tokn in window]
                     
-                    if "Announcing Time's decision on NBC" in str(self.doc):
-                        print(str_window)
-                        print(ne)
-                        input()
+                    #if "Announcing Time's decision on NBC" in str(self.doc):
+                    #    print(str_window)
+                    #    print(ne)
+                    #    input()
                     
                     
                     if " ".join(str_window) == ne:
                         if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
                             self.split_nes.append((window, ne_type, i))
                             continue
-                        
-                    
-                    
-                
-                
                 
             # dark spell end
                 
-
-
             self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
 
 
@@ -126,14 +119,18 @@ class TextContainer:
 
 if __name__ == "__main__":
     # source = pronoun_text
-    source = parse_body_text_from_url("https://www.bbc.com/news/world-europe-50740324")
-        
+    # link = "https://www.bbc.com/news/world-asia-50723352"
+    # link = "https://www.bbc.com/news/live/election-2019-50739883"
+    # link = "https://www.bbc.com/news/world-us-canada-50747374"
+    link = "https://www.bbc.com/news/world-asia-50741094"
+    # link = "https://www.bbc.com/news/world-europe-50740324"
+    
+    source = parse_body_text_from_url(link)
     wholetext = TextContainer(source)
 
 
 
     lippu = False
-
     for sentence_i in wholetext.sentences.keys():
         for word_i in wholetext.sentences[sentence_i].words.keys():
             word, tag = wholetext.sentences[sentence_i].words[word_i]

@@ -109,6 +109,23 @@ def _parse_body_text_from_text_version(text):
     # print(text_as_list)
     # print("\n".join(text_as_list))
     text = "\n".join(text_as_list)
+    
+    
+    # remove multiple newlines to normal dot
+    while "\n\n" in text:
+        text = text.replace("\n\n", ". ")
+
+    # remove multiple dots resulting from previous operation
+    while ".." in text:
+        text = text.replace("..", ".")
+
+    # remove multiple space
+    while "  " in text:
+        text = text.replace("  ", " ")
+    
+    while "\n" in text:
+        text = text.replace("\n", " ")
+
     return text
     # print(text_as_list)
 
