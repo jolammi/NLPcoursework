@@ -12,24 +12,24 @@ the relations that will be parsed are;
  +------+------------+--[type here]-----------+
  |      |            |                        |
  v      v            v                        |
-noun, proper noun, named entity  ... ... ...pronoun
+noun, proper noun, named entity ... ... ...pronoun
 
 """
 
 try:
     from seapie import Seapie as seapie # DEBUG
 except:
-    print("comment out seapie import and seapie() call or do pip3 install seapie")
+    print("do pip3 install seapie. importerror happened")
 
 import nltk
 import spacy
 import webbrowser
-import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
 from spacy import displacy
+from pronouns import pronouns
 from stat_parser import Parser
-from text_files import long_text, short_text, pronoun_text
 from parse_url_to_text import parse_body_text_from_url
-
+from text_files import long_text, short_text, pronoun_text
+import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
 
 # installation notes for libraries
 #
@@ -48,51 +48,122 @@ class TextContainer:
     whole text in its classified form for further processing
     """
 
-    class Sentence:
+    class SentenceContainer:
         """container class for holding a single sentences's text in its
         classified form for further processing
         """
         
         def __init__(self, sentence):
-            self.doc = nlp(sentence)
+            self.doc = nlp(sentence) # the base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
-            self.tags = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
+            self.split_nes = []
+            
+            
+            
+            # here lays a dark spell of the olden times. beware.
+            # split_nes contains named entities in format that stores their lenght in words, type, and starting point. this data is generated
+            # by iterating over the self.doc and self.nes and then matching the correct indexes to correct named entities
+            # EXAMPLE NE VS SPLIT_NE
+            # [("The US White House", "PLACE"), ("First", "CARDINAL")]
+            # [(("The", "US", "White", "House", "PLACE"), 10, 5), ("First", "CARDINAL", 10, 5)]
+            
+            self.split_nes = []
+            
+            for ne, ne_type in self.nes:
+                for sym in """.,"_'-""":
+                    if sym in ne:
+                        print("Contact markus if you see this error. unexpected symbol in named entity might have caused index mismatching")
+                        print("please log steps to repeat this error. opening seapie")
+                        seapie()
+                        
+                window_size = len(ne.split(" "))
+                doc_size = len(self.doc)
+                
+                
+                
+                for i in range(doc_size-window_size+1):
+                    window = self.doc[i:(i+window_size)]
+                    str_window = [str(tokn) for tokn in window]
+                    
+                    if "Announcing Time's decision on NBC" in str(self.doc):
+                        print(str_window)
+                        print(ne)
+                        input()
+                    
+                    
+                    if " ".join(str_window) == ne:
+                        if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
+                            self.split_nes.append((window, ne_type, i))
+                            continue
+                        
+                    
+                    
+                
+                
+                
+            # dark spell end
+                
 
 
+            self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
 
-            # TODO tee indexi yhden sentence sisälle, jotta textcontainerin initin self.connections rakenne voi toimia
+
 
     def __init__(self, plaintext):
         self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
-        self.sentences = {index: Sentence(i) for (index, sentence) in enumerate(self.plain_sentences)}
+        self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
         
-        self.connections = [] # this should contain connections between sentences in the following format:
-        # alku TextContainer indenxi
-        # alku Sentence indenxi
-        # loppu TextContainer indexi
-        # loppu Sentence indenxi
-
-
-
-
-
-
-
+        self.connections = []
+        # from TextContainer index, from SentenceContainer index
+        # to TextContainer index, to SentenceContainer index
+        #
+        # example: the word "He" should point to "Jouni" in the below sentence:
+        # "Jouni has a headache. He thusly ingested 50mg theanine and 200mg caffeine"
+        # this is saved as [ ... , ((1, 0), (0, 0)) , ...] which stands for
+        # pointing from first word of second sentence to first word of first sentence.
 
 
 
 if __name__ == "__main__":
-    source = pronoun_text
-    
-    nlp = en_core_web_sm.load()
-    sentences = [token for token in nltk.tokenize.sent_tokenize(source)]
-
-    for index, sentence in enumerate(sentences):
-
+    # source = pronoun_text
+    source = parse_body_text_from_url("https://www.bbc.com/news/world-europe-50740324")
         
-        print(doc)
-        print("======")
-        print(named_entities)
+    wholetext = TextContainer(source)
+
+
+
+    lippu = False
+
+    for sentence_i in wholetext.sentences.keys():
+        for word_i in wholetext.sentences[sentence_i].words.keys():
+            word, tag = wholetext.sentences[sentence_i].words[word_i]
+            print(sentence_i, word_i, word)
+            
+            
+            if word in pronouns:
+                lippu = True
+                print("---above was pronoun---")
+                
+                
+            for i in wholetext.sentences[sentence_i].nes:
+                if word in i:
+                    print("----above is named entity----")
+                    
+                
+                
+        if lippu:
+            input()
+            lippu = False
+
+            # print(wholetext.sentences[sentence_i-1].words[word_i])
+            
+    seapie()
+
+    
+    # for index, sentence in enumerate(sentences):
+
+        # print("======")
+        # print(named_entities)
         
         # seapie()
         
@@ -130,8 +201,6 @@ if __name__ == "__main__":
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK END DO NOT REMOVE ===========
-
-
 
 
 
