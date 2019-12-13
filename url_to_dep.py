@@ -40,5 +40,5 @@ print("".join(str(sentences)))
 
 
 
-##displacy.serve(nlp(str(sentences[20])), style='dep', options = {'distance': 120})
-displacy.serve(nlp(str(sentences)), style='ent', options = {'distance': 120})
+displacy.serve(nlp(str(sentences[20])), style='dep', options = {'distance': 120})
+##displacy.serve(nlp(str(sentences)), style='ent', options = {'distance': 120})
