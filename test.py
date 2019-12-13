@@ -118,9 +118,9 @@ class TextContainer:
 if __name__ == "__main__":
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
-    # link = "https://www.bbc.com/news/live/election-2019-50739883"
-    link = "https://www.bbc.com/news/world-us-canada-50747374"
+    link = "https://www.bbc.com/news/live/election-2019-50739883"
     
+    # link = "https://www.bbc.com/news/world-us-canada-50747374"
     # link = "https://www.bbc.com/news/world-asia-50741094"
     # link = "https://www.bbc.com/news/world-europe-50740324"
     

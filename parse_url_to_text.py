@@ -65,6 +65,7 @@ def _html_to_text(html):
     h = html2text.HTML2Text()
     h.ignore_links = True
     h.ignore_images = True
+    h.ignore_videos = True
     return h.handle(html)
 
 
