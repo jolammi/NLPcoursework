@@ -5,6 +5,8 @@
 ##pip install --upgrade setuptools
 ##pip install cython==0.29.14
 ##pip install https://github.com/huggingface/neuralcoref/archive/master.zip
+##python -m spacy download en
+
 ## Ehkä merkitystä numpy==1.17.2
 
 
