@@ -72,9 +72,7 @@ class TextContainer:
             for ne, ne_type in self.nes:
                 for sym in """.,"_'-""":
                     if sym in ne:
-                        print("Contact markus if you see this error. unexpected symbol in named entity might have caused index mismatching")
-                        print("please log steps to repeat this error. opening seapie")
-                        seapie()
+                        print("possible index mismatching due to a symbol in named entity <", ne, ">")
                         
                 window_size = len(ne.split(" "))
                 doc_size = len(self.doc)
@@ -120,9 +118,10 @@ class TextContainer:
 if __name__ == "__main__":
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
-    # link = "https://www.bbc.com/news/live/election-2019-50739883"
+    link = "https://www.bbc.com/news/live/election-2019-50739883"
+    
     # link = "https://www.bbc.com/news/world-us-canada-50747374"
-    link = "https://www.bbc.com/news/world-asia-50741094"
+    # link = "https://www.bbc.com/news/world-asia-50741094"
     # link = "https://www.bbc.com/news/world-europe-50740324"
     
     source = parse_body_text_from_url(link)
@@ -134,26 +133,33 @@ if __name__ == "__main__":
     for sentence_i in wholetext.sentences.keys():
         for word_i in wholetext.sentences[sentence_i].words.keys():
             word, tag = wholetext.sentences[sentence_i].words[word_i]
-            print(sentence_i, word_i, word)
+            # print(sentence_i, word_i, word)
             
             
             if word in pronouns:
                 lippu = True
-                print("---above was pronoun---")
+                #print("---above was pronoun---")
                 
                 
             for i in wholetext.sentences[sentence_i].nes:
                 if word in i:
-                    print("----above is named entity----")
-                    
+                    #print("----above is named entity----")
+                    pass
                 
                 
         if lippu:
-            input()
+            #input()
             lippu = False
 
             # print(wholetext.sentences[sentence_i-1].words[word_i])
-            
+    
+    
+    for index in wholetext.sentences.keys():
+        if len(wholetext.sentences[index].nes) != len(wholetext.sentences[index].split_nes):
+            print("index mismatch in sentence", index)
+    
+    
+    
     seapie()
 
     

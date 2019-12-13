@@ -65,6 +65,7 @@ def _html_to_text(html):
     h = html2text.HTML2Text()
     h.ignore_links = True
     h.ignore_images = True
+    h.ignore_videos = True
     return h.handle(html)
 
 
@@ -110,6 +111,9 @@ def _parse_body_text_from_text_version(text):
     # print("\n".join(text_as_list))
     text = "\n".join(text_as_list)
     
+    # convert symbol text to avoid problems in ne indexing. possible
+    # double space is fixed by later replaces
+    text = text.replace("%", " percent ")
     
     # remove multiple newlines to normal dot
     while "\n\n" in text:
@@ -123,8 +127,31 @@ def _parse_body_text_from_text_version(text):
     while "  " in text:
         text = text.replace("  ", " ")
     
+    # replace newlines with spaces
     while "\n" in text:
         text = text.replace("\n", " ")
+
+    # replace prefix with more machine-readable form
+    text = text.replace("pro-", "pro ")
+    text = text.replace("anti-", "anti ")
+    
+    text = text.replace("one-", "one ")
+    text = text.replace("two-", "two ")
+    text = text.replace("three-", "three ")
+    text = text.replace("four-", "four ")
+    text = text.replace("five-", "five ")
+    text = text.replace("six-", "six ")
+    text = text.replace("seven-", "seven ")
+    text = text.replace("eight-", "eight ")
+    text = text.replace("nine-", "nine ")
+    text = text.replace("ten-", "ten ")
+
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    for number in numbers:
+        if number+"km" in text:
+            text = text.replace(number+"km", number+" km")
+
+
 
     return text
     # print(text_as_list)
