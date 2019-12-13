@@ -20,17 +20,18 @@ root.resizable(False, False)
 
 #Labels
 #######
-label_url_input = tk.Label(root, text="URL").grid(row=0, column=0)
-label_browserpath_input = tk.Label(root, text="Browser path").grid(row=1)
-label_text_input = tk.Label(root, text="Input text").grid(row=2)
-label_ = tk.Label(root, text="Output:").grid(row=5, padx=21,sticky=tk.W)
-label_output_bs4 = tk.Label(root, text="Named entities (NLTK & spaCy)").grid(row=6)
-label_output_neural = tk.Label(root, text="Named entities (Neural coreference)").grid(row=8)
+tk.Label(root, text="URL").grid(row=0, column=0)
+tk.Label(root, text="Browser path").grid(row=1)
+tk.Label(root, text="Input text").grid(row=2)
+tk.Label(root, text="Output:").grid(row=5, padx=21,sticky=tk.W)
+tk.Label(root, text="Named entities (NLTK & spaCy)").grid(row=6)
+tk.Label(root, text="Named entities (Neural coreference)").grid(row=8)
 
 #Inputs
 #######
 entry_url = tk.Entry(root)
 entry_url.grid(row=0, column=1,ipadx=200, sticky=tk.W)
+
 entry_browserpath = tk.Entry(root)
 entry_browserpath.grid(row=1, column=1,ipadx=200, sticky=tk.W)
 
@@ -53,9 +54,9 @@ output_neuro_area.grid(row=10, columnspan=3, sticky=tk.W+tk.E)
 
 #Buttons
 ########
-quit = tk.Button(root, text="Quit", width=15, command=root.quit).grid(row=15,column=2, pady=4)
-parse = tk.Button(root, text="Parse", width=15, ).grid(row=15,column=1,sticky=tk.E, pady=4)
-ok = tk.Button(root, text="Ok", width=15, command=click).grid(row=0, column=2, rowspan=2, sticky=tk.N+tk.S)
+tk.Button(root, text="Quit", width=15, command=root.quit).grid(row=15,column=2, pady=4)
+tk.Button(root, text="Parse", width=15, ).grid(row=15,column=1,sticky=tk.E, pady=4)
+tk.Button(root, text="Ok", width=15, command=click).grid(row=0, column=2, rowspan=2, sticky=tk.N+tk.S)
 
 
 
