@@ -19,7 +19,7 @@ noun, proper noun, named entity ... ... ...pronoun
 try:
     from seapie import Seapie as seapie # DEBUG
 except:
-    print("comment out seapie import and seapie() call or do pip3 install seapie")
+    print("do pip3 install seapie. importerror happened")
 
 import nltk
 import spacy
@@ -56,6 +56,54 @@ class TextContainer:
         def __init__(self, sentence):
             self.doc = nlp(sentence) # the base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
+            self.split_nes = []
+            
+            
+            
+            # here lays a dark spell of the olden times. beware.
+            # split_nes contains named entities in format that stores their lenght in words, type, and starting point. this data is generated
+            # by iterating over the self.doc and self.nes and then matching the correct indexes to correct named entities
+            # EXAMPLE NE VS SPLIT_NE
+            # [("The US White House", "PLACE"), ("First", "CARDINAL")]
+            # [(("The", "US", "White", "House", "PLACE"), 10, 5), ("First", "CARDINAL", 10, 5)]
+            
+            self.split_nes = []
+            
+            for ne, ne_type in self.nes:
+                for sym in """.,"_'-""":
+                    if sym in ne:
+                        print("Contact markus if you see this error. unexpected symbol in named entity might have caused index mismatching")
+                        print("please log steps to repeat this error. opening seapie")
+                        seapie()
+                        
+                window_size = len(ne.split(" "))
+                doc_size = len(self.doc)
+                
+                
+                
+                for i in range(doc_size-window_size+1):
+                    window = self.doc[i:(i+window_size)]
+                    str_window = [str(tokn) for tokn in window]
+                    
+                    if "Announcing Time's decision on NBC" in str(self.doc):
+                        print(str_window)
+                        print(ne)
+                        input()
+                    
+                    
+                    if " ".join(str_window) == ne:
+                        if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
+                            self.split_nes.append((window, ne_type, i))
+                            continue
+                        
+                    
+                    
+                
+                
+                
+            # dark spell end
+                
+
 
             self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
 
@@ -82,8 +130,6 @@ if __name__ == "__main__":
         
     wholetext = TextContainer(source)
 
-
-    wholetext.sentences[4].words[4]
 
 
     lippu = False
