@@ -30,7 +30,9 @@ link = "https://www.bbc.com/news/world-europe-50740324"
 doc1 = parse_body_text_from_url(link)
 doc1 = nlp(doc1)
 ##print(doc1)
-print(doc1._.coref_clusters)  ##All the clusters of corefering mentions in the doc
+##print(doc1._.coref_clusters)  ##All the clusters of corefering mentions in the doc
+for i in doc1._.coref_clusters:
+    print(i)
 
 
 ##for ent in doc1.ents:
