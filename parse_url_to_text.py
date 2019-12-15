@@ -62,6 +62,9 @@ def _html_to_text(html):
     # sentences = [x.text for x in article.sents]
     # output = "".join(str(sentences))
     # return output
+
+    # TODO: parse
+    # <span class="off-screen">Media caption</span> out of tree
     h = html2text.HTML2Text()
     h.ignore_links = True
     h.ignore_images = True
@@ -151,7 +154,29 @@ def _parse_body_text_from_text_version(text):
         if number+"km" in text:
             text = text.replace(number+"km", number+" km")
 
+    text = text.replace("#", "")
+    text = text.replace("*", "")
 
+    #get rid of "Media playback is unsupported on your device."
+    while "Media playback is unsupported on your device." in text:
+        text = text.replace(
+            " Media playback is unsupported on your device.", ""
+        )
+    
+    # get rid of "Media Caption" glued to other words
+    word = "Media caption"
+    idx = text.find(word)
+    end_index = idx + len(word)
+    if text[end_index] != " ":
+        text = text[:idx] + text[end_index:]
+
+
+    # remove multiple space
+    while "  " in text:
+        text = text.replace("  ", " ")
+    
+    while ". ." in text:
+        text = text.replace(". .", ".")
 
     return text
     # print(text_as_list)
@@ -185,5 +210,6 @@ def _debugfunc():
 
 
 
+_debugfunc()
 
 
