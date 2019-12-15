@@ -85,17 +85,15 @@ def _parse_body_text_from_text_version(text):
         # blacklist = [
         #     "    * ",
         #     "    * ",
-
         # ]
+
     for idx, row in enumerate(text_as_list):
-        if row.startswith(
-            (
-            "    * ",
-            "Share this with",
-            "  * Share this with"
-        )
+        if row.startswith(("    * ",
+                           "Share this with",
+                           "  * Share this with")
         ):
             text_as_list.pop(idx)
+ 
     for idx, row in enumerate(text_as_list):
         if row == text_as_list[idx-2] and row != " " and row != "":
             # print(row)
@@ -107,12 +105,14 @@ def _parse_body_text_from_text_version(text):
             text_as_list = text_as_list[idx+3:]
             break
 
-    # print(text_as_list)
-    # print("\n".join(text_as_list))
+
     text = "\n".join(text_as_list)
     
-    # convert symbol text to avoid problems in ne indexing. possible
-    # double space is fixed by later replaces
+    # remove extra hashtags
+    while "##" in text:
+        text = text.replace("##", "#")
+    
+    # convert symbol to text. possible double space fixed later
     text = text.replace("%", " percent ")
     
     # remove multiple newlines to normal dot
@@ -122,14 +122,14 @@ def _parse_body_text_from_text_version(text):
     # remove multiple dots resulting from previous operation
     while ".." in text:
         text = text.replace("..", ".")
-
-    # remove multiple space
-    while "  " in text:
-        text = text.replace("  ", " ")
     
     # replace newlines with spaces
     while "\n" in text:
         text = text.replace("\n", " ")
+
+    # remove multiple space
+    while "  " in text:
+        text = text.replace("  ", " ")
 
     # replace prefix with more machine-readable form
     text = text.replace("pro-", "pro ")

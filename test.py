@@ -56,48 +56,54 @@ class TextContainer:
         def __init__(self, sentence):
             self.doc = nlp(sentence) # the base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
-            self.split_nes = []
-            
-            
-            
-            # here lays a dark spell of the olden times. beware.
-            # split_nes contains named entities in format that stores their lenght in words, type, and starting point. this data is generated
-            # by iterating over the self.doc and self.nes and then matching the correct indexes to correct named entities
-            # EXAMPLE NE VS SPLIT_NE
-            # [("The US White House", "PLACE"), ("First", "CARDINAL")]
-            # [(("The", "US", "White", "House", "PLACE"), 10, 5), ("First", "CARDINAL", 10, 5)]
-            
-            self.split_nes = []
+            self.ne_indexes = []
             
             for ne, ne_type in self.nes:
-                for sym in """.,"_'-""":
-                    if sym in ne:
-                        print("possible index mismatching due to a symbol in named entity <", ne, ">")
+                index = str(self.doc).find(ne) # find first index of occurence. will be -1 if nonexistent
+                while index != -1:   # while occurence exists
+                    index = str(self.doc).find(ne, index) # find new index for it
+                    if index != -1: # if result is that something exists
+                        if not (index, index+len(ne)) in self.ne_indexes: # and is not already listed
+                            self.ne_indexes.append((index, index+len(ne))) # add it to the list
+                        index += 1 # and increase count by 1 to find next one
                         
-                window_size = len(ne.split(" "))
-                doc_size = len(self.doc)
-                
-                
-                
-                for i in range(doc_size-window_size+1):
-                    window = self.doc[i:(i+window_size)]
-                    str_window = [str(tokn) for tokn in window]
-                    
-                    #if "Announcing Time's decision on NBC" in str(self.doc):
-                    #    print(str_window)
-                    #    print(ne)
-                    #    input()
-                    
-                    
-                    if " ".join(str_window) == ne:
-                        if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
-                            self.split_nes.append((window, ne_type, i))
-                            continue
-                
-            # dark spell end
-                
-            self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
+            # this will result in the following error:
+            # "Europe" is matched from "European comission" if both "Europe" and "European comission" are in the sentence
+            # resulting in two matches of "Europe"
+            # the following clears it
+            duplicates = []
+            for start, end in self.ne_indexes:
+                for start2, end2 in self.ne_indexes:
+                    if start2 >= start and end2 <= end:
+                        if not (start == start2 and end == end2):
+                            duplicates.append((start2, end2))
+            for i in duplicates:
+                    self.ne_indexes.remove(i)
 
+            
+            
+            
+            
+            # this block will most likely go unused
+            
+            # self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
+            
+            # here lays a dark spell of the olden times. beware.
+            # self.split_nes = []
+            # for ne, ne_type in self.nes:
+                # for sym in """.,"_'-""":
+                    # if sym in ne:
+                        # print("possible index mismatching due to a symbol in named entity →", ne, "←")
+                # window_size = len(ne.split(" "))
+                # doc_size = len(self.doc)
+                # for i in range(doc_size-window_size+1):
+                    # window = self.doc[i:(i+window_size)]
+                    # str_window = [str(tokn) for tokn in window]
+                    # if " ".join(str_window) == ne:
+                        # if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
+                            # self.split_nes.append((window, ne_type, i))
+                            # continue
+            # dark spell end
 
 
     def __init__(self, plaintext):
@@ -118,48 +124,49 @@ class TextContainer:
 if __name__ == "__main__":
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
-    link = "https://www.bbc.com/news/live/election-2019-50739883"
-    
+
     # link = "https://www.bbc.com/news/world-us-canada-50747374"
     # link = "https://www.bbc.com/news/world-asia-50741094"
-    # link = "https://www.bbc.com/news/world-europe-50740324"
+    link = "https://www.bbc.com/news/world-europe-50740324"
     
+    # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
+    
+
     source = parse_body_text_from_url(link)
     wholetext = TextContainer(source)
 
-
-
-    lippu = False
-    for sentence_i in wholetext.sentences.keys():
-        for word_i in wholetext.sentences[sentence_i].words.keys():
-            word, tag = wholetext.sentences[sentence_i].words[word_i]
-            # print(sentence_i, word_i, word)
-            
-            
-            if word in pronouns:
-                lippu = True
-                #print("---above was pronoun---")
-                
-                
-            for i in wholetext.sentences[sentence_i].nes:
-                if word in i:
-                    #print("----above is named entity----")
-                    pass
-                
-                
-        if lippu:
-            #input()
-            lippu = False
-
-            # print(wholetext.sentences[sentence_i-1].words[word_i])
+    # lippu = False
+    # for sentence_i in wholetext.sentences.keys():
+        # for word_i in wholetext.sentences[sentence_i].words.keys():
+            # word, tag = wholetext.sentences[sentence_i].words[word_i]
+            # # print(sentence_i, word_i, word)
+            # if word in pronouns:
+                # lippu = True
+                # #print("---above was pronoun---")
+            # for i in wholetext.sentences[sentence_i].nes:
+                # if word in i:
+                    # #print("----above is named entity----")
+                    # pass
+        # if lippu:
+            # #input()
+            # lippu = False
+            # # print(wholetext.sentences[sentence_i-1].words[word_i])
     
     
     for index in wholetext.sentences.keys():
-        if len(wholetext.sentences[index].nes) != len(wholetext.sentences[index].split_nes):
+        if len(wholetext.sentences[index].nes) != len(wholetext.sentences[index].ne_indexes):
             print("index mismatch in sentence", index)
     
     
     
+    for sentence_i in wholetext.sentences.keys():
+        print(str(wholetext.sentences[sentence_i].doc))
+        print()
+        for start, end in wholetext.sentences[sentence_i].ne_indexes:
+            print(str(wholetext.sentences[sentence_i].doc)[start:end])
+        print("========================")
+        
+        
     seapie()
 
     
