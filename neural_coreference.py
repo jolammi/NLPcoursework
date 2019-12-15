@@ -1,12 +1,11 @@
-
-##In case If you have an error mentioning spacy.strings.StringStore size changed, may indicate binary incompatibility
-##pip uninstall neuralcoref
-##pip uninstall spacy
-##pip install spacy==2.1.6
-##pip install --upgrade setuptools
-##pip install cython==0.29.14
-##pip install https://github.com/huggingface/neuralcoref/archive/master.zip
-##python -m spacy download en
+## In case If you have an error mentioning spacy.strings.StringStore size changed, may indicate binary incompatibility
+## pip uninstall neuralcoref
+## pip uninstall spacy
+## pip install spacy==2.1.6
+## pip install --upgrade setuptools
+## pip install cython==0.29.14
+## pip install https://github.com/huggingface/neuralcoref/archive/master.zip
+## python -m spacy download en
 
 ## Ehkä merkitystä numpy==1.17.2
 
