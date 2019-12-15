@@ -151,6 +151,8 @@ def _parse_body_text_from_text_version(text):
         if number+"km" in text:
             text = text.replace(number+"km", number+" km")
 
+    text = text.replace("#", "")
+
 
 
     return text
