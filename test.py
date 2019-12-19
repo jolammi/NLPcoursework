@@ -43,6 +43,58 @@ import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed impor
 
 
 
+def pprint(text):
+    for idx, chr in enumerate('"' + text + '"'):
+            print(chr, end="")
+            if idx % 79 == 0 and idx != 0:
+                print()
+    print()
+
+
+
+def neprint(text, ne_indexes):
+    accumulator = []
+    starts = []
+    stops = []
+    
+    for start, stop in ne_indexes:
+        starts.append(start)
+        stops.append(stop)
+
+    accumulator = []
+
+    for idx, chr in enumerate(text):
+
+            if idx in starts:
+                accumulator.append("◄")
+
+            if idx in stops:
+                accumulator.append("►")
+                
+            accumulator.append(chr)
+                
+    for idx, chr in enumerate('"' + "".join(accumulator) + '"'):
+        print(chr, end="")
+        if idx % 79 == 0 and idx != 0:
+            print()
+    print()
+
+def posprint(postags):
+    accumulator = []
+
+
+    for word, tag in postags:
+        if tag == "PRP" or tag == "PRP$":
+            accumulator.append("◄" + word + "►")
+        else:
+            accumulator.append(word)
+
+    for idx, chr in enumerate('"' + " ".join(accumulator) + '"'):
+        print(chr, end="")
+        if idx % 79 == 0 and idx != 0:
+            print()
+    print()
+
 class TextContainer:
     """container class for holding a single web page's or such documents
     whole text in its classified form for further processing
@@ -54,9 +106,12 @@ class TextContainer:
         """
         
         def __init__(self, sentence):
-            self.doc = nlp(sentence) # the base doc
+            self.doc = nlp(sentence) # the nlp base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
+            self.txt = sentence
             self.ne_indexes = []
+            self.pos = [token for token in nltk.pos_tag(nltk.word_tokenize(sentence))]
+            
             
             for ne, ne_type in self.nes:
                 index = str(self.doc).find(ne) # find first index of occurence. will be -1 if nonexistent
@@ -107,8 +162,9 @@ class TextContainer:
 
 
     def __init__(self, plaintext):
-        self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
-        self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
+        # self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
+        # self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
+        self.sentences = [TextContainer.SentenceContainer(sentence) for sentence in nltk.tokenize.sent_tokenize(plaintext)]
         
         self.connections = []
         # from TextContainer index, from SentenceContainer index
@@ -124,48 +180,37 @@ class TextContainer:
 if __name__ == "__main__":
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
-
     # link = "https://www.bbc.com/news/world-us-canada-50747374"
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
-    
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
     
 
     source = parse_body_text_from_url(link)
     wholetext = TextContainer(source)
 
-    # lippu = False
-    # for sentence_i in wholetext.sentences.keys():
-        # for word_i in wholetext.sentences[sentence_i].words.keys():
-            # word, tag = wholetext.sentences[sentence_i].words[word_i]
-            # # print(sentence_i, word_i, word)
-            # if word in pronouns:
-                # lippu = True
-                # #print("---above was pronoun---")
-            # for i in wholetext.sentences[sentence_i].nes:
-                # if word in i:
-                    # #print("----above is named entity----")
-                    # pass
-        # if lippu:
-            # #input()
-            # lippu = False
-            # # print(wholetext.sentences[sentence_i-1].words[word_i])
-    
-    
-    for index in wholetext.sentences.keys():
-        if len(wholetext.sentences[index].nes) != len(wholetext.sentences[index].ne_indexes):
+    for index, sentence in enumerate(wholetext.sentences):
+        if len(sentence.nes) != len(sentence.ne_indexes):
             print("index mismatch in sentence", index)
-    
-    
-    
-    for sentence_i in wholetext.sentences.keys():
-        print(str(wholetext.sentences[sentence_i].doc))
-        print()
-        for start, end in wholetext.sentences[sentence_i].ne_indexes:
-            print(str(wholetext.sentences[sentence_i].doc)[start:end])
-        print("========================")
+            exit()
         
+        print("─"*80)
+        print("SENTENCE INDEX:", index)
+        
+        print("\nPLAINTEXT")
+        pprint(sentence.txt)
+        
+        print("\n◄NAMED ENTITIES►")
+        neprint(sentence.txt, sentence.ne_indexes)
+        
+        print("\n◄PERSONAL PRONOUNS►")
+        posprint(sentence.pos)
+        
+        
+        # for start, end in sentence.ne_indexes:
+        #     print(sentence.txt[start:end])
+            
+        input()
         
     seapie()
 
@@ -254,4 +299,40 @@ WDT   Wh-determiner
 WP    Wh-pronoun
 WP$   Possessive wh-pronoun
 WRB   Wh-adverb
+"""
+
+
+"""
+tags found so far
+NN
+IN
+CD
+RBR
+JJR
+RB
+VBZ
+MD
+VBN
+JJ
+VB
+JJS
+PRP
+WP
+UH
+NNS
+VBD
+RBS
+VBG
+WDT
+$
+VBP
+NNPS
+NNP
+TO
+POS
+DT
+RP
+PRP$
+WRB
+CC
 """
