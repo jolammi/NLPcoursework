@@ -9,10 +9,10 @@ example sentence:
 Olli is sleeping during the lecture. He is very tired
 
 the relations that will be parsed are;
- +--------------------+------------+--[type here]-----------+
- |                    |            |                        |
- v                    v            v                        |
-noun(substantive), proper noun, named entity ... ... ...pronoun
+   +------------+--[type here]-----------+
+   |            |                        |
+   v            v                        |
+proper noun, named entity ... ... ...pronoun
 
 """
 
@@ -43,55 +43,6 @@ import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed impor
 
 
 
-def pprint(text):
-    for idx, chr in enumerate('"' + text + '"'):
-            print(chr, end="")
-            if idx % 79 == 0 and idx != 0:
-                print()
-    print()
-
-
-
-def neprint(text, ne_indexes):
-    accumulator = []
-    starts = []
-    stops = []
-    
-    for start, stop in ne_indexes:
-        starts.append(start)
-        stops.append(stop)
-
-    accumulator = []
-
-    for idx, chr in enumerate(text):
-
-            if idx in starts:
-                accumulator.append("◄")
-
-            if idx in stops:
-                accumulator.append("►")
-                
-            accumulator.append(chr)
-                
-    for idx, chr in enumerate('"' + "".join(accumulator) + '"'):
-        print(chr, end="")
-        if idx % 79 == 0 and idx != 0:
-            print()
-    print()
-
-def pronounprint(postags):
-    accumulator = []
-    for word, tag in postags:
-        if tag in ["PRP", "PRP$", "WP$", "WP"]:
-            accumulator.append("◄" + word + "►")
-        else:
-            accumulator.append(word)
-
-    for idx, chr in enumerate('"' + " ".join(accumulator) + '"'):
-        print(chr, end="")
-        if idx % 79 == 0 and idx != 0:
-            print()
-    print()
 
 class TextContainer:
     """container class for holding a single web page's or such documents
@@ -114,7 +65,29 @@ class TextContainer:
             self.pronoun_indexes = []
             self.propernoun_indexes = []
 
-            
+
+            def _str_find_fix(pos, index, sentence):
+                """acts like str.find but doesn't match words that are contained in word. returns index
+                returns next index if first fails due to being part of a another word"""
+
+                abc = "abcedfghijlkmnopqrstuvwxyzåäö"
+    
+                while True:
+                    index = sentence.find(pos, index)
+                    if index == -1:
+                        return index
+                    if (index != 0) and (index != len(sentence)-1): #not first letter or last letter
+                        if sentence[index-1] in abc:
+                            index += 1
+                            continue
+                        if sentence[index+len(pos)] in abc:
+                            index += 1
+                            continue
+                        else:
+                            return index
+                    else:
+                        return index
+
             ## THIS BLOCK WILL CREATE NAMED ENTITY INDEXES
             for ne, ne_type in self.nes:
                 index = sentence.find(ne) # find first index of occurence. will be -1 if nonexistent
@@ -137,13 +110,13 @@ class TextContainer:
             for i in duplicates:
                 self.ne_indexes.remove(i)
 
-
             ## THIS BLOCK WILL CREATE PRONOUN INDEXES. ITS ALMOST COPYPASTE OF BELOW BLOCK
             for pos, pos_type in self.pos:
                 if pos_type in ["PRP", "PRP$", "WP$", "WP"]:
                     index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
                     while index != -1:   # while occurence exists
-                        index = sentence.find(pos, index) # find new index for it
+                        # index = sentence.find(pos, index) # find new index for it # DEBUG # TODO # THIS IS THE ORIGINAL LINE
+                        index = _str_find_fix(pos, index, sentence)
                         if index != -1: # if result is that something exists
                             if not (index, index+len(pos)) in self.pronoun_indexes: # and is not already listed
                                 self.pronoun_indexes.append((index, index+len(pos))) # add it to the list
@@ -167,7 +140,8 @@ class TextContainer:
                 if pos_type in ["NNP", "NNPS"]:
                     index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
                     while index != -1:   # while occurence exists
-                        index = sentence.find(pos, index) # find new index for it
+                        # index = sentence.find(pos, index) # find new index for it # DEBUG # TODO # THIS IS THE ORIGINAL LINE
+                        index = _str_find_fix(pos, index, sentence)
                         if index != -1: # if result is that something exists
                             if not (index, index+len(pos)) in self.propernoun_indexes: # and is not already listed
                                 self.propernoun_indexes.append((index, index+len(pos))) # add it to the list
@@ -185,8 +159,7 @@ class TextContainer:
                 for i in duplicates:
                     self.propernoun_indexes.remove(i)
 
-
-            ## THIS BLOCK WILL CREATE PROPER NOUN INDEXES. ITS ALMOST COPYPASTE OF ABOVE BLOCK
+            ## THIS BLOCK WILL CREATE NOUN INDEXES. ITS ALMOST COPYPASTE OF ABOVE BLOCK
             for pos, pos_type in self.pos:
                 if pos_type in ["NNS", "NN"]:
                     index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
@@ -209,6 +182,37 @@ class TextContainer:
                 for i in duplicates:
                     self.noun_indexes.remove(i)
 
+        def pprint(self):
+            """this will prettyprint give self with its known index information"""
+            
+            # upack information for easier looping
+            ne_starts = [start for start, stop in self.ne_indexes]
+            ne_stops = [stop for start, stop in self.ne_indexes]
+            noun_starts = [start for start, stop in self.noun_indexes]
+            noun_stops = [stop for start, stop in self.noun_indexes]
+            pronoun_starts = [start for start, stop in self.pronoun_indexes]
+            pronoun_stops = [stop for start, stop in self.pronoun_indexes]
+            propernoun_starts = [start for start, stop in self.propernoun_indexes]
+            propernoun_stops = [stop for start, stop in self.propernoun_indexes]
+
+            # self.ne_indexes          ◄─────────┐
+            # self.noun_indexes        ◄─────────┤
+            # self.pronoun_indexes  ►────────────┤  from pronoun to anything else
+            # self.propernoun_indexes  ◄─────────┘
+
+            accumulator = []
+            for index, letter in enumerate(self.txt):
+                if (index in pronoun_starts) or (index in pronoun_stops):
+                    accumulator.append("▲") # this block finds and marks pronouns with up triangle
+                if index in ne_starts+ne_stops+propernoun_starts+propernoun_stops+noun_starts+noun_stops:
+                    accumulator.append("▼") # this block finds and marks the rest with down triangle
+                accumulator.append(letter)
+
+            for index, chr in enumerate('"' + "".join(accumulator) + '"'):
+                    print(chr, end="")
+                    if index % 79 == 0 and index != 0:
+                        print()
+            print()
 
 
     def __init__(self, plaintext):
@@ -247,14 +251,7 @@ if __name__ == "__main__":
         print("─"*80)
         print("SENTENCE INDEX:", index)
         
-        print("\nPLAINTEXT")
-        pprint(sentence.txt)
-        
-        print("\n◄NAMED ENTITIES►")
-        neprint(sentence.txt, sentence.ne_indexes)
-        
-        print("\n◄PRONOUNS►")
-        pronounprint(sentence.pos)
+        sentence.pprint()
         
         
         # for start, end in sentence.ne_indexes:
