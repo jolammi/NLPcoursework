@@ -9,10 +9,10 @@ example sentence:
 Olli is sleeping during the lecture. He is very tired
 
 the relations that will be parsed are;
- +------+------------+--[type here]-----------+
- |      |            |                        |
- v      v            v                        |
-noun, proper noun, named entity ... ... ...pronoun
+ +--------------------+------------+--[type here]-----------+
+ |                    |            |                        |
+ v                    v            v                        |
+noun(substantive), proper noun, named entity ... ... ...pronoun
 
 """
 
@@ -79,12 +79,10 @@ def neprint(text, ne_indexes):
             print()
     print()
 
-def posprint(postags):
+def pronounprint(postags):
     accumulator = []
-
-
     for word, tag in postags:
-        if tag == "PRP" or tag == "PRP$":
+        if tag in ["PRP", "PRP$", "WP$", "WP"]:
             accumulator.append("◄" + word + "►")
         else:
             accumulator.append(word)
@@ -106,22 +104,26 @@ class TextContainer:
         """
         
         def __init__(self, sentence):
+            self.txt = sentence
             self.doc = nlp(sentence) # the nlp base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
-            self.txt = sentence
-            self.ne_indexes = []
             self.pos = [token for token in nltk.pos_tag(nltk.word_tokenize(sentence))]
             
+            self.ne_indexes = []
+            self.noun_indexes = []
+            self.pronoun_indexes = []
+            self.propernoun_indexes = []
+
             
+            ## THIS BLOCK WILL CREATE NAMED ENTITY INDEXES
             for ne, ne_type in self.nes:
-                index = str(self.doc).find(ne) # find first index of occurence. will be -1 if nonexistent
+                index = sentence.find(ne) # find first index of occurence. will be -1 if nonexistent
                 while index != -1:   # while occurence exists
-                    index = str(self.doc).find(ne, index) # find new index for it
+                    index = sentence.find(ne, index) # find new index for it
                     if index != -1: # if result is that something exists
                         if not (index, index+len(ne)) in self.ne_indexes: # and is not already listed
                             self.ne_indexes.append((index, index+len(ne))) # add it to the list
                         index += 1 # and increase count by 1 to find next one
-                        
             # this will result in the following error:
             # "Europe" is matched from "European comission" if both "Europe" and "European comission" are in the sentence
             # resulting in two matches of "Europe"
@@ -133,32 +135,80 @@ class TextContainer:
                         if not (start == start2 and end == end2):
                             duplicates.append((start2, end2))
             for i in duplicates:
-                    self.ne_indexes.remove(i)
+                self.ne_indexes.remove(i)
 
+
+            ## THIS BLOCK WILL CREATE PRONOUN INDEXES. ITS ALMOST COPYPASTE OF BELOW BLOCK
+            for pos, pos_type in self.pos:
+                if pos_type in ["PRP", "PRP$", "WP$", "WP"]:
+                    index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
+                    while index != -1:   # while occurence exists
+                        index = sentence.find(pos, index) # find new index for it
+                        if index != -1: # if result is that something exists
+                            if not (index, index+len(pos)) in self.pronoun_indexes: # and is not already listed
+                                self.pronoun_indexes.append((index, index+len(pos))) # add it to the list
+                            index += 1 # and increase count by 1 to find next one
+                # this will result in the following error:
+                # "Europe" is matched from "European comission" if both "Europe" and "European comission" are in the sentence
+                # resulting in two matches of "Europe"
+                # the following clears it
+                duplicates = []
+                for start, end in self.pronoun_indexes:
+                    for start2, end2 in self.pronoun_indexes:
+                        if start2 >= start and end2 <= end:
+                            if not (start == start2 and end == end2):
+                                duplicates.append((start2, end2))
+                for i in duplicates:
+                    self.pronoun_indexes.remove(i)
             
             
-            
-            
-            # this block will most likely go unused
-            
-            # self.words = {index: word_and_tag for (index, word_and_tag) in enumerate(nltk.pos_tag(nltk.word_tokenize(sentence)))} # plaintext words with indexes
-            
-            # here lays a dark spell of the olden times. beware.
-            # self.split_nes = []
-            # for ne, ne_type in self.nes:
-                # for sym in """.,"_'-""":
-                    # if sym in ne:
-                        # print("possible index mismatching due to a symbol in named entity →", ne, "←")
-                # window_size = len(ne.split(" "))
-                # doc_size = len(self.doc)
-                # for i in range(doc_size-window_size+1):
-                    # window = self.doc[i:(i+window_size)]
-                    # str_window = [str(tokn) for tokn in window]
-                    # if " ".join(str_window) == ne:
-                        # if (window, ne_type, i) not in self.split_nes: # this should avoid duplication of indexes when multiples of same named entity occur
-                            # self.split_nes.append((window, ne_type, i))
-                            # continue
-            # dark spell end
+            ## THIS BLOCK WILL CREATE PROPER NOUN INDEXES. ITS ALMOST COPYPASTE OF BELOW BLOCK
+            for pos, pos_type in self.pos:
+                if pos_type in ["NNP", "NNPS"]:
+                    index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
+                    while index != -1:   # while occurence exists
+                        index = sentence.find(pos, index) # find new index for it
+                        if index != -1: # if result is that something exists
+                            if not (index, index+len(pos)) in self.propernoun_indexes: # and is not already listed
+                                self.propernoun_indexes.append((index, index+len(pos))) # add it to the list
+                            index += 1 # and increase count by 1 to find next one
+                # this will result in the following error:
+                # "Europe" is matched from "European comission" if both "Europe" and "European comission" are in the sentence
+                # resulting in two matches of "Europe"
+                # the following clears it
+                duplicates = []
+                for start, end in self.propernoun_indexes:
+                    for start2, end2 in self.propernoun_indexes:
+                        if start2 >= start and end2 <= end:
+                            if not (start == start2 and end == end2):
+                                duplicates.append((start2, end2))
+                for i in duplicates:
+                    self.propernoun_indexes.remove(i)
+
+
+            ## THIS BLOCK WILL CREATE PROPER NOUN INDEXES. ITS ALMOST COPYPASTE OF ABOVE BLOCK
+            for pos, pos_type in self.pos:
+                if pos_type in ["NNS", "NN"]:
+                    index = sentence.find(pos) # find first index of occurence. will be -1 if nonexistent
+                    while index != -1:   # while occurence exists
+                        index = sentence.find(pos, index) # find new index for it
+                        if index != -1: # if result is that something exists
+                            if not (index, index+len(pos)) in self.noun_indexes: # and is not already listed
+                                self.noun_indexes.append((index, index+len(pos))) # add it to the list
+                            index += 1 # and increase count by 1 to find next one
+                # this will result in the following error:
+                # "Europe" is matched from "European comission" if both "Europe" and "European comission" are in the sentence
+                # resulting in two matches of "Europe"
+                # the following clears it
+                duplicates = []
+                for start, end in self.noun_indexes:
+                    for start2, end2 in self.noun_indexes:
+                        if start2 >= start and end2 <= end:
+                            if not (start == start2 and end == end2):
+                                duplicates.append((start2, end2))
+                for i in duplicates:
+                    self.noun_indexes.remove(i)
+
 
 
     def __init__(self, plaintext):
@@ -203,14 +253,18 @@ if __name__ == "__main__":
         print("\n◄NAMED ENTITIES►")
         neprint(sentence.txt, sentence.ne_indexes)
         
-        print("\n◄PERSONAL PRONOUNS►")
-        posprint(sentence.pos)
+        print("\n◄PRONOUNS►")
+        pronounprint(sentence.pos)
         
         
         # for start, end in sentence.ne_indexes:
         #     print(sentence.txt[start:end])
             
         input()
+        
+        
+        for sentence in wholetext.sentences:
+            sentence.pos
         
     seapie()
 
