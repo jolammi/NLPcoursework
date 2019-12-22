@@ -224,10 +224,60 @@ class TextContainer:
         # from TextContainer index, from SentenceContainer index
         # to TextContainer index, to SentenceContainer index
         #
+        # from sentence and letter index to
+        # to sentence and letter index
         # example: the word "He" should point to "Jouni" in the below sentence:
         # "Jouni has a headache. He thusly ingested 50mg theanine and 200mg caffeine"
         # this is saved as [ ... , ((1, 0), (0, 0)) , ...] which stands for
         # pointing from first word of second sentence to first word of first sentence.
+
+
+def parse_gender(pronoun):
+    """returns gender of pronoun"""
+    if pronoun in ("his"):
+        return "m"
+    raise NotImplementedError("gender for this word has not been implemented")
+
+def parse_coref(textcontainer, sentence_idx, word_idx):
+    """argument indexes are for the word that you want to resolve the coref for
+    returns goal sentence index and goal word index
+    """
+    
+    sentence = textcontainer.sentences[sentence_idx]
+    word = sentence.txt[word_idx[0]:word_idx[1]]
+    
+    gender = parse_gender(word)
+    
+    for start, end in sentence.ne_indexes + sentence.noun_indexes + sentence.propernoun_indexes:
+        goal = sentence.txt[start:end]
+        
+        
+        if goaltype == starttype:
+            create connnection
+    
+    
+    pass
+
+
+##          +--------+----------+
+##          | plural | singular |
+## +--------+--------+----------+
+## |   male |        |    he    |
+## +--------+--------+----------+
+## | female |        |    she   |
+## +--------+--------+----------+
+
+
+
+## I, you, he, she, it, they
+## me, you, him, her, it
+## my, mine, your, yours, his, her, hers, its
+## who, whom, whose, what, which
+## another, each, everything, nobody, either, someone
+## who, whom, whose, that, which
+## myself, yourself, himself, herself, itself
+## this, that
+
 
 
 
@@ -239,30 +289,25 @@ if __name__ == "__main__":
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
     
-
     source = parse_body_text_from_url(link)
     wholetext = TextContainer(source)
 
     for index, sentence in enumerate(wholetext.sentences):
-        if len(sentence.nes) != len(sentence.ne_indexes):
+        if len(sentence.nes) != len(sentence.ne_indexes): # sanity check
             print("index mismatch in sentence", index)
             exit()
-        
         print("─"*80)
         print("SENTENCE INDEX:", index)
-        
         sentence.pprint()
         
-        
-        # for start, end in sentence.ne_indexes:
-        #     print(sentence.txt[start:end])
-            
-        input()
-        
-        
-        for sentence in wholetext.sentences:
-            sentence.pos
-        
+    
+    last_sentence = wholetext.sentences[-1]
+    last_pronoun = wholetext.sentences[49].pronoun_indexes[-1]
+    
+    parse_coref(wholetext, last_sentence, last_pronoun)
+    
+    
+    
     seapie()
 
     
