@@ -15,6 +15,7 @@ def save():
                 print(idx+1, "saved data from name:", json["name"])
     except Exception:
         print("DATAN DUMPPAUKSESSA KÄVI PERKELE JOTAIN. SEAPIE AUKI")
+        seapie()
 atexit.register(save)
 
 
