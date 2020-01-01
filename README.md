@@ -1,6 +1,8 @@
 # NLPcoursework
 A repo for the course project on course 521158S Natural Language Processing and Text Mining at University of Oulu.
 
+It uses Python 3.7 and various libraries.
+
 ## Project assignment
 Project 8. Co-referencing Textual Analysis
 

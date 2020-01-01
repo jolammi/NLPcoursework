@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.scrolledtext as tkst
+from parse_url_to_text import parse_body_text_from_url
 
 # tk.Button(root, text="teksti", command=funktio).grid(paikka)
 # Entryyn kirjotettu saa ulos kun funktioon laittaa entry_n.get()
@@ -10,8 +11,11 @@ import tkinter.scrolledtext as tkst
 def click():
     url = entry_url.get()
     browser_path = entry_browserpath.get()
+    text = parse_body_text_from_url(url)
+
     print(url)
     print(browser_path)
+    entry_textinput.insert("insert",text)
     return url, browser_path
 
 
@@ -61,11 +65,16 @@ output_neuro_area.grid(row=10, columnspan=3, sticky=tk.W + tk.E)
 
 # Buttons
 ########
-tk.Button(root, text="Quit", width=15, command=root.quit).grid(row=15, column=2, pady=4)
-tk.Button(root, text="Parse", width=15,).grid(row=15, column=1, sticky=tk.E, pady=4)
-tk.Button(root, text="Ok", width=15, command=click).grid(
+ok_button = tk.Button(root, text="Ok", width=15, command=click).grid(
     row=0, column=2, rowspan=2, sticky=tk.N + tk.S
 )
+quit_button = tk.Button(root, text="Quit", width=15, command=root.quit).grid(
+    row=15, column=2, pady=4
+)
+parse_button = tk.Button(root, text="Parse", width=15,).grid(
+    row=15, column=1, sticky=tk.E, pady=4
+)
+
 
 
 ##############
