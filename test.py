@@ -232,17 +232,79 @@ class TextContainer:
         # pointing from first word of second sentence to first word of first sentence.
 
 
-def parse_gender(pronoun):
-    """returns gender of pronoun"""
-    if pronoun in ("his"):
-        return "m"
-    raise NotImplementedError("gender for this word has not been implemented")
+def get_pronoun_type(word):
+    """returns gender and multiplicity of a word.
+    words are categorized into four categories represented with numbers 1,2,3,4
+
+    due to the rules written in parenthesis four values are enough.
+    it should be noted that 4 can match also 1,2,3.
+
+    1: singular (always genderless) e.g "i"
+    2: male (always singular) e.g. "he"
+    3: female (always singular) e.g. "she"
+    4: plural (always genderless) e.g. "they"
+
+    I, you, he, she, it, they
+    me, you, him, her, it
+    my, mine, your, yours, his, her, hers, its
+    myself, yourself, himself, herself, itself
+    who, whom, whose, what, which
+    another, each, everything, nobody, either, someone
+    this, that
+    """
+    
+    # this word map should cover all the cases as its only supposed to include pronuns
+    word_map = {"i":          1,
+                "you":        1,
+                "he":         2,
+                "she":        3,
+                "it":         1,
+                "they":       4,
+                "me":         1,
+                "him":        2,
+                "her":        3,
+                "my":         1,
+                "mine":       1,
+                "your":       1,
+                "yours":      1,
+                "his":        2,
+                "hers":       3,
+                "its":        1,
+                "myself":     1,
+                "yourself":   1,
+                "himself":    2,
+                "herself":    3,
+                "itself":     1,
+                "who":        1,
+                "whom":       1,
+                "whose":      1,
+                "what":       1,
+                "which":      1,
+                "another":    1,
+                "each":       1,
+                "everything": 4,
+                "nobody":     1,
+                "either":     4,
+                "someone":    1,
+                "this":       1,
+                "that":       1}
+    word = word.lower()
+    try:
+        wordtype = word_map[word]
+    except KeyError(word + " is not mapped to any value"):
+        raise NotImplementedError
+    else:
+        return wordtype
+
+def get_goal_type(word):
+    pass
 
 def parse_coref(textcontainer, sentence_idx, word_idx):
     """argument indexes are for the word that you want to resolve the coref for
     returns goal sentence index and goal word index
     """
     
+    """
     sentence = textcontainer.sentences[sentence_idx]
     word = sentence.txt[word_idx[0]:word_idx[1]]
     
@@ -254,29 +316,12 @@ def parse_coref(textcontainer, sentence_idx, word_idx):
         
         if goaltype == starttype:
             create connnection
+    """
     
     
     pass
 
 
-##          +--------+----------+
-##          | plural | singular |
-## +--------+--------+----------+
-## |   male |        |    he    |
-## +--------+--------+----------+
-## | female |        |    she   |
-## +--------+--------+----------+
-
-
-
-## I, you, he, she, it, they
-## me, you, him, her, it
-## my, mine, your, yours, his, her, hers, its
-## who, whom, whose, what, which
-## another, each, everything, nobody, either, someone
-## who, whom, whose, that, which
-## myself, yourself, himself, herself, itself
-## this, that
 
 
 
