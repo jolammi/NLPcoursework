@@ -55,6 +55,10 @@ for idx, name in enumerate(names):
             url = "http://api.genderize.io/?name=" + name
             requ = requests.get(url, proxies=myproxy)
             data = json.loads(requ.content)
+            
+            if data == {'error': 'Request limit reached'}:
+                raise AssertionError
+            
             results.append(data)
             print("stole", idx+1, "of", len(names), "got data for name:", name, "with", choice)
         except KeyboardInterrupt:
