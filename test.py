@@ -266,95 +266,105 @@ class TextContainer:
         # this is saved as [ ... , ((1, 0), (0, 0)) , ...] which stands for
         # pointing from first word of second sentence to first word of first sentence.
 
+    @staticmethod
+    def _get_pronoun_type(word):
+        """returns gender and multiplicity of a word.
+        words are categorized into four categories represented with numbers 1,2,3,4
 
-def get_pronoun_type(word):
-    """returns gender and multiplicity of a word.
-    words are categorized into four categories represented with numbers 1,2,3,4
+        due to the rules written in parenthesis four values are enough.
+        it should be noted that 4 can match also 1,2,3.
 
-    due to the rules written in parenthesis four values are enough.
-    it should be noted that 4 can match also 1,2,3.
+        1: singular (always genderless) e.g "i"
+        2: male (always singular) e.g. "he"
+        3: female (always singular) e.g. "she"
+        4: plural (always genderless) e.g. "they"
 
-    1: singular (always genderless) e.g "i"
-    2: male (always singular) e.g. "he"
-    3: female (always singular) e.g. "she"
-    4: plural (always genderless) e.g. "they"
+        I, you, he, she, it, they
+        me, you, him, her, it
+        my, mine, your, yours, his, her, hers, its
+        myself, yourself, himself, herself, itself
+        who, whom, whose, what, which
+        another, each, everything, nobody, either, someone
+        this, that
+        """
 
-    I, you, he, she, it, they
-    me, you, him, her, it
-    my, mine, your, yours, his, her, hers, its
-    myself, yourself, himself, herself, itself
-    who, whom, whose, what, which
-    another, each, everything, nobody, either, someone
-    this, that
-    """
+        # this word map should cover all the cases as its only supposed to include pronuns
+        word_map = {"i":          1, "you":        1, "he":         2,
+                    "she":        3, "it":         1, "they":       4,
+                    "me":         1, "him":        2, "her":        3,
+                    "my":         1, "mine":       1, "your":       1,
+                    "yours":      1, "his":        2, "hers":       3,
+                    "its":        1, "myself":     1, "yourself":   1,
+                    "himself":    2, "herself":    3, "itself":     1,
+                    "who":        1, "whom":       1, "whose":      1,
+                    "what":       1, "which":      1, "another":    1,
+                    "each":       1, "everything": 4, "nobody":     1,
+                    "either":     4, "someone":    1, "this":       1,
+                    "that":       1, "we":         4, "themselves": 4,
+                    "our":        4, "their":      4, "theirs":     4,
+                    "them":       4}
+        word = word.lower()
+        try:
+            wordtype = word_map[word]
+        except KeyError:
+            raise NotImplementedError("'" + word + "'" + " is not mapped to any value")
+        else:
+            return wordtype
 
-    # this word map should cover all the cases as its only supposed to include pronuns
-    word_map = {"i":          1,
-                "you":        1,
-                "he":         2,
-                "she":        3,
-                "it":         1,
-                "they":       4,
-                "me":         1,
-                "him":        2,
-                "her":        3,
-                "my":         1,
-                "mine":       1,
-                "your":       1,
-                "yours":      1,
-                "his":        2,
-                "hers":       3,
-                "its":        1,
-                "myself":     1,
-                "yourself":   1,
-                "himself":    2,
-                "herself":    3,
-                "itself":     1,
-                "who":        1,
-                "whom":       1,
-                "whose":      1,
-                "what":       1,
-                "which":      1,
-                "another":    1,
-                "each":       1,
-                "everything": 4,
-                "nobody":     1,
-                "either":     4,
-                "someone":    1,
-                "this":       1,
-                "that":       1}
-    word = word.lower()
-    try:
-        wordtype = word_map[word]
-    except KeyError(word + " is not mapped to any value"):
-        raise NotImplementedError
-    else:
-        return wordtype
+
+    def parse_corefs(self):
+        """argument indexes are for the word that you want to resolve the coref for
+        returns goal sentence index and goal word index
+        """
+        
+        # these indexes can be assumed to be correct and they can be
+        # assumed to correctly contain multiple words separated by spaces
+        # so they are used as is and then tagged as needed
+        # self.ne_indexes = []
+        # self.noun_indexes = []
+        # self.pronoun_indexes = []
+        # self.propernoun_indexes = []
+        
+        
+        for i in reversed(range(len(self.sentences))): # reversed pointer over sentences
+            sentence = self.sentences[i]
+            txt = sentence.txt
+            
+            
+            for p_start, p_end in sentence.pronoun_indexes:
+                pronoun = txt[p_start:p_end]
+            
+                pronoun_type = TextContainer._get_pronoun_type(pronoun)
+                #seapie()
+                # DEBUG ERROR RAISE
+                if pronoun_type in (2,3):
+                
+                    for idx, (ne, ne_type) in enumerate(sentence.nes):
+                        if ne_type == "PERSON":
+                            print("pronoun_type", pronoun_type)
+                            print("names[ne.lower()]+1", names[ne.lower()]+1)
+                            if pronoun_type == names[ne.lower()]+1: # magix fix. mies on databasessa 1 kun pitäis olla 2 jotta pronomini lista toimii
+                                ne_start, ne_stop = sentence.ne_indexes[idx]
+                                # if p_start > ne_start:
+                                print("MATCH!!!!")
+                                seapie()
+                            
+                            
+                else:
+                    print("pronoun types for other than male/female not implemented")
+                    # raise NotImplementedError("pronoun types for other than male/female not implemented")
+               
+            
+            #print(self.sentences[i].txt)
+
+        
+
+
 
 def get_goal_type(word):
     pass
 
-def parse_coref(textcontainer, sentence_idx, word_idx):
-    """argument indexes are for the word that you want to resolve the coref for
-    returns goal sentence index and goal word index
-    """
 
-    """
-    sentence = textcontainer.sentences[sentence_idx]
-    word = sentence.txt[word_idx[0]:word_idx[1]]
-
-    gender = parse_gender(word)
-
-    for start, end in sentence.ne_indexes + sentence.noun_indexes + sentence.propernoun_indexes:
-        goal = sentence.txt[start:end]
-
-
-        if goaltype == starttype:
-            create connnection
-    """
-
-
-    pass
 
 
 
@@ -370,6 +380,10 @@ if __name__ == "__main__":
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
 
     source = parse_body_text_from_url(link)
+    
+    # DEBUG
+    source = "Markus is so fucking tired his eyes are going to fall of his head"
+    
     wholetext = TextContainer(source)
 
     for index, sentence in enumerate(wholetext.sentences):
@@ -381,11 +395,7 @@ if __name__ == "__main__":
         sentence.pprint()
 
 
-    last_sentence = wholetext.sentences[-1]
-    last_pronoun = wholetext.sentences[49].pronoun_indexes[-1]
-
-    parse_coref(wholetext, last_sentence, last_pronoun)
-
+    wholetext.parse_corefs()
 
 
     seapie()
