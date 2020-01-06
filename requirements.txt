@@ -6,6 +6,6 @@ nltk==3.4.5
 beautifulsoup4==4.8.1
 numpy==1.17.2
 html2text==2019.9.26
-# pip3 install --upgrade setuptools 
+# pip3 install --upgrade setuptools
 #pip3 install https://github.com/huggingface/neuralcoref/archive/master.zip
 

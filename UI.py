@@ -23,6 +23,7 @@ def click_ok(root):
 
     # print(url)
     # print(browser_path)
+    entry_textinput.delete('1.0', tk.END)
     entry_textinput.insert("insert", TEXT_FROM_URL)
     a.grid_forget()
 
@@ -43,6 +44,8 @@ def click_parse(root):
         # print("─"*80)
         # print("SENTENCE INDEX:", index)
         str += sentence.tmp_output()
+    output_bs4_area.delete('1.0', tk.END)
+    output_neuro_area.delete('1.0', tk.END)
     output_bs4_area.insert("insert",str)
     output_neuro_area.insert("insert", neural_coreference(entry_textinput.get(1.0, tk.END)))
     b.grid_forget()
