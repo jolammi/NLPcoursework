@@ -54,13 +54,13 @@ class TextContainer:
         """container class for holding a single sentences's text in its
         classified form for further processing
         """
-        
+
         def __init__(self, sentence):
             self.txt = sentence
             self.doc = nlp(sentence) # the nlp base doc
             self.nes = [(X.text, X.label_) for X in self.doc.ents] # named entities
             self.pos = [token for token in nltk.pos_tag(nltk.word_tokenize(sentence))]
-            
+
             self.ne_indexes = []
             self.noun_indexes = []
             self.pronoun_indexes = []
@@ -72,7 +72,7 @@ class TextContainer:
                 returns next index if first fails due to being part of a another word"""
 
                 abc = "abcedfghijlkmnopqrstuvwxyzåäö"
-    
+
                 while True:
                     index = sentence.find(pos, index)
                     if index == -1:
@@ -134,8 +134,8 @@ class TextContainer:
                                 duplicates.append((start2, end2))
                 for i in duplicates:
                     self.pronoun_indexes.remove(i)
-            
-            
+
+
             ## THIS BLOCK WILL CREATE PROPER NOUN INDEXES. ITS ALMOST COPYPASTE OF BELOW BLOCK
             for pos, pos_type in self.pos:
                 if pos_type in ["NNP", "NNPS"]:
@@ -185,7 +185,7 @@ class TextContainer:
 
         def pprint(self):
             """this will prettyprint give self with its known index information"""
-            
+
             # upack information for easier looping
             ne_starts = [start for start, stop in self.ne_indexes]
             ne_stops = [stop for start, stop in self.ne_indexes]
@@ -215,15 +215,46 @@ class TextContainer:
                         print()
             print()
 
+
+        def tmp_output(self):
+            """this will prettyprint give self with its known index information"""
+
+            # upack information for easier looping
+            ne_starts = [start for start, stop in self.ne_indexes]
+            ne_stops = [stop for start, stop in self.ne_indexes]
+            noun_starts = [start for start, stop in self.noun_indexes]
+            noun_stops = [stop for start, stop in self.noun_indexes]
+            pronoun_starts = [start for start, stop in self.pronoun_indexes]
+            pronoun_stops = [stop for start, stop in self.pronoun_indexes]
+            propernoun_starts = [start for start, stop in self.propernoun_indexes]
+            propernoun_stops = [stop for start, stop in self.propernoun_indexes]
+
+            # self.ne_indexes          ◄─────────┐
+            # self.noun_indexes        ◄─────────┤
+            # self.pronoun_indexes  ►────────────┤  from pronoun to anything else
+            # self.propernoun_indexes  ◄─────────┘
+
+            accumulator = []
+            str = ""
+            for index, letter in enumerate(self.txt):
+                if (index in pronoun_starts) or (index in pronoun_stops):
+                    accumulator.append("▲") # this block finds and marks pronouns with up triangle
+                if index in ne_starts+ne_stops+propernoun_starts+propernoun_stops+noun_starts+noun_stops:
+                    accumulator.append("▼") # this block finds and marks the rest with down triangle
+                accumulator.append(letter)
+
             for index, chr in enumerate('"' + "".join(accumulator) + '"'):
                     str += chr
+                    if index % 79 == 0 and index != 0:
+                        str += "\n"
             return str
+
 
     def __init__(self, plaintext):
         # self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
         # self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
         self.sentences = [TextContainer.SentenceContainer(sentence) for sentence in nltk.tokenize.sent_tokenize(plaintext)]
-        
+
         self.connections = []
         # from TextContainer index, from SentenceContainer index
         # to TextContainer index, to SentenceContainer index
@@ -256,7 +287,7 @@ def get_pronoun_type(word):
     another, each, everything, nobody, either, someone
     this, that
     """
-    
+
     # this word map should cover all the cases as its only supposed to include pronuns
     word_map = {"i":          1,
                 "you":        1,
@@ -307,22 +338,22 @@ def parse_coref(textcontainer, sentence_idx, word_idx):
     """argument indexes are for the word that you want to resolve the coref for
     returns goal sentence index and goal word index
     """
-    
+
     """
     sentence = textcontainer.sentences[sentence_idx]
     word = sentence.txt[word_idx[0]:word_idx[1]]
-    
+
     gender = parse_gender(word)
-    
+
     for start, end in sentence.ne_indexes + sentence.noun_indexes + sentence.propernoun_indexes:
         goal = sentence.txt[start:end]
-        
-        
+
+
         if goaltype == starttype:
             create connnection
     """
-    
-    
+
+
     pass
 
 
@@ -337,7 +368,7 @@ if __name__ == "__main__":
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
-    
+
     source = parse_body_text_from_url(link)
     wholetext = TextContainer(source)
 
@@ -348,47 +379,47 @@ if __name__ == "__main__":
         print("─"*80)
         print("SENTENCE INDEX:", index)
         sentence.pprint()
-        
-    
+
+
     last_sentence = wholetext.sentences[-1]
     last_pronoun = wholetext.sentences[49].pronoun_indexes[-1]
-    
+
     parse_coref(wholetext, last_sentence, last_pronoun)
-    
-    
-    
+
+
+
     seapie()
 
-    
+
     # for index, sentence in enumerate(sentences):
 
         # print("======")
         # print(named_entities)
-        
+
         # seapie()
-        
+
         # =========== OLD MAIN BLOCK BEGIN. DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK BEGIN. DO NOT REMOVE ===========
         # =========== OLD MAIN BLOCK BEGIN. DO NOT REMOVE ===========
         # print("=====", "parsing sentence", index+1, "of", len(sentences), "=====")
-        
+
         # tagged = [tokenized for tokenized in nltk.pos_tag(nltk.word_tokenize(sentence))]
         # tree = Parser().parse(sentence)
         # doc = nlp(sentence)
         # named_entities = [(X.text, X.label_) for X in doc.ents]
-        
+
         # show tree structure in tkinter window for the sentence
         # tree.draw()
-        
+
         # print tagged text in flat format
         # for word, tag in tagged: print(word, "(" + tag + ") ", end="")
-        
+
         # print tagged text in tree format (different tags than above!)
         # print(tree)
-        
+
         # dump named entities from the sentence
         # print(named_entities)
-        
+
         # visualize connections between words in the sentence in browser
         # browser = "C:/Program Files/Mozilla Firefox/firefox.exe %s"
         # print("ctrl+c to continue by closing the server")
