@@ -243,8 +243,6 @@ class TextContainer:
 
             for index, chr in enumerate('"' + "".join(accumulator) + '"'):
                     str += chr
-                    if index % 79 == 0 and index != 0:
-                        str += "\n"
             return str
 
     def __init__(self, plaintext):

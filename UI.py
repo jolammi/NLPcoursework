@@ -1,7 +1,9 @@
 import tkinter as tk
 import tkinter.scrolledtext as tkst
 from parse_url_to_text import parse_body_text_from_url
-from test import download_nltk_packages, TextContainer 
+from test import download_nltk_packages, TextContainer
+from neural_coreference import neural_coreference
+import time
 
 
 # tk.Button(root, text="teksti", command=funktio).grid(paikka)
@@ -10,7 +12,10 @@ from test import download_nltk_packages, TextContainer
 # Jos ei haluta käyttämisen jälkeen pitää muuttujaa -> funktion loppuun muuttuja.delete(0, tk.END)
 
 
-def click_ok():
+def click_ok(root):
+    a = tk.Label(root, text="Getting article text...", font='Helvetica 14 bold')
+    a.grid(row=15)
+    root.update_idletasks()
     global TEXT_FROM_URL
     url = entry_url.get()
     browser_path = entry_browserpath.get()
@@ -18,14 +23,19 @@ def click_ok():
 
     # print(url)
     # print(browser_path)
-    entry_textinput.insert("insert",TEXT_FROM_URL)
+    entry_textinput.insert("insert", TEXT_FROM_URL)
+    a.grid_forget()
+
     return url, browser_path
 
 
-def click_parse():
+def click_parse(root):
     global TEXT_FROM_URL
+    b = tk.Label(root, text="Parsing, please wait...", font='Helvetica 14 bold')
+    b.grid(row=15)
+    root.update_idletasks()
     str = ""
-    wholetext = TextContainer(TEXT_FROM_URL)
+    wholetext = TextContainer(entry_textinput.get(1.0, tk.END))
     for index, sentence in enumerate(wholetext.sentences):
         if len(sentence.nes) != len(sentence.ne_indexes): # sanity check
             print("index mismatch in sentence", index)
@@ -34,6 +44,8 @@ def click_parse():
         # print("SENTENCE INDEX:", index)
         str += sentence.tmp_output()
     output_bs4_area.insert("insert",str)
+    output_neuro_area.insert("insert", neural_coreference(entry_textinput.get(1.0, tk.END)))
+    b.grid_forget()
 
 
 # download needed nltk packages to be ready for use
@@ -42,7 +54,7 @@ download_nltk_packages()
 # Window
 #######
 root = tk.Tk()
-root.title("THE UI")
+root.title("Named Entity Coreference Resolution")
 root.resizable(False, False)
 
 # Labels
@@ -85,13 +97,13 @@ output_neuro_area.grid(row=10, columnspan=3, sticky=tk.W + tk.E)
 
 # Buttons
 ########
-ok_button = tk.Button(root, text="Ok", width=15, command=click_ok).grid(
+ok_button = tk.Button(root, text="Ok", width=15, command=lambda: click_ok(root)).grid(
     row=0, column=2, rowspan=2, sticky=tk.N + tk.S
 )
 quit_button = tk.Button(root, text="Quit", width=15, command=root.quit).grid(
     row=15, column=2, pady=4
 )
-parse_button = tk.Button(root, text="Parse", width=15, command=click_parse).grid(
+parse_button = tk.Button(root, text="Parse", width=15, command=lambda: click_parse(root)).grid(
     row=15, column=1, sticky=tk.E, pady=4
 )
 
