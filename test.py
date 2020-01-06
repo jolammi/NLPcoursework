@@ -366,12 +366,17 @@ def get_goal_type(word):
 
 
 
-
+def download_nltk_packages():
+    print( "\n\n---||| Downloading punkt package for nltk |||---\n\n")
+    nltk.download('punkt')
+    print( "\n\n---||| Downloading averaged_perception_tagger package for nltk |||---\n\n")
+    nltk.download('averaged_perceptron_tagger')
 
 
 
 
 if __name__ == "__main__":
+    download_nltk_packages()
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
     # link = "https://www.bbc.com/news/world-us-canada-50747374"

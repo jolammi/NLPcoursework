@@ -91,19 +91,29 @@ def _parse_body_text_from_text_version(text):
         # ]
 
     # Add dots in bullet point case for previous sentences
-    for idx,char in enumerate(text):
-        if char == "*":
-            if text[idx-4] == "\\" and text[idx-3] == "n":
-                if text[idx-5] not in "?!.:;":
-                    text = text[:idx-4] + "." + text[idx-5:] 
-                    
+    text2 = text
+    # for idx,char in enumerate(text2):
+    #     if char == "*":
+    #         if text[idx-3] == "\n":
+    #             # if text[idx-4] not in "?!.:;":
+                # text = text[:idx-3] + "." + text[idx-3:]
+    #print(text_as_list[50])
+    for idx in range(len(text_as_list)):
+        try:
+            #print(idx)
+            if text_as_list[idx][2] == "*":
+                # if text_as_list[idx-1][-1] not in "?!.:;":
+                text_as_list[idx-1] = text_as_list[idx-1] + "."
+        except IndexError:
+            continue
+
     for idx, row in enumerate(text_as_list):
         if row.startswith(("    * ",
                            "Share this with",
                            "  * Share this with")
         ):
             text_as_list.pop(idx)
- 
+
     for idx, row in enumerate(text_as_list):
         if row == text_as_list[idx-2] and row != " " and row != "":
             # print(row)
@@ -117,14 +127,14 @@ def _parse_body_text_from_text_version(text):
 
 
     text = "\n".join(text_as_list)
-    
+
     # remove extra hashtags
     while "##" in text:
         text = text.replace("##", "#")
-    
+
     # convert symbol to text. possible double space fixed later
     text = text.replace("%", " percent ")
-    
+
     # remove multiple newlines to normal dot
     while "\n\n" in text:
         text = text.replace("\n\n", ". ")
@@ -132,7 +142,7 @@ def _parse_body_text_from_text_version(text):
     # remove multiple dots resulting from previous operation
     while ".." in text:
         text = text.replace("..", ".")
-    
+
     # replace newlines with spaces
     while "\n" in text:
         text = text.replace("\n", " ")
@@ -145,7 +155,7 @@ def _parse_body_text_from_text_version(text):
     # replace prefix with more machine-readable form
     text = text.replace("pro-", "pro ")
     text = text.replace("anti-", "anti ")
-    
+
     text = text.replace("one-", "one ")
     text = text.replace("two-", "two ")
     text = text.replace("three-", "three ")
@@ -170,7 +180,7 @@ def _parse_body_text_from_text_version(text):
         text = text.replace(
             " Media playback is unsupported on your device.", ""
         )
-    
+
     # get rid of "Media Caption" glued to other words
     word = "Media caption"
     idx = text.find(word)
@@ -182,7 +192,7 @@ def _parse_body_text_from_text_version(text):
     # remove multiple space
     while "  " in text:
         text = text.replace("  ", " ")
-    
+
     while ". ." in text:
         text = text.replace(". .", ".")
 
@@ -222,7 +232,7 @@ def _debugfunc():
     #print(text)
 
 
-
-_debugfunc()
+if __name__ == "__main__"
+    _debugfunc()
 
 
