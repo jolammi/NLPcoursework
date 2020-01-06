@@ -205,9 +205,12 @@ def _debugfunc():
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.iltalehti.fi/viihdeuutiset/a/045cb810-1ffd-4641-84d7-4995953a9a4d"
-    #text = parse_body_text_from_url(link)
-    teksti = _html_to_text(link)
-    print(teksti)
+    # text = parse_body_text_from_url(link)
+    # teksti = _html_to_text(link)
+    html = _get_html_file(link)
+    text = _html_to_text(html)
+    # text = _parse_body_text_from_text_version(text)
+    print(text)
     #print(text)
 
 
