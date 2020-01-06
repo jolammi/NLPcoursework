@@ -100,7 +100,7 @@ def _parse_body_text_from_text_version(text):
     #print(text_as_list[50])
     for idx in range(len(text_as_list)):
         try:
-            print(idx)
+            #print(idx)
             if text_as_list[idx][2] == "*":
                 # if text_as_list[idx-1][-1] not in "?!.:;":
                 text_as_list[idx-1] = text_as_list[idx-1] + "."
