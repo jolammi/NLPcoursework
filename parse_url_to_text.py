@@ -205,11 +205,13 @@ def _debugfunc():
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.iltalehti.fi/viihdeuutiset/a/045cb810-1ffd-4641-84d7-4995953a9a4d"
-    text = parse_body_text_from_url(link)
-    print(text)
+    #text = parse_body_text_from_url(link)
+    teksti = _html_to_text(link)
+    print(teksti)
+    #print(text)
 
 
 
-# _debugfunc()
+_debugfunc()
 
 
