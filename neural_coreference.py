@@ -42,6 +42,8 @@ link = "https://www.bbc.com/news/world-europe-50740324"
 doc1 = parse_body_text_from_url(link)
 output = neural_coreference(doc1)
 print(output)
+print("saatana")
+#doc1._.coref_clusters[1].mentions[-1].start
 # ///////// comment before pushing
 
 
