@@ -90,6 +90,13 @@ def _parse_body_text_from_text_version(text):
         #     "    * ",
         # ]
 
+    # Add dots in bullet point case for previous sentences
+    for idx,char in enumerate(text):
+        if char == "*":
+            if text[idx-4] == "\\" and text[idx-3] == "n":
+                if text[idx-5] not in "?!.:;":
+                    text = text[:idx-4] + "." + text[idx-5:] 
+                    
     for idx, row in enumerate(text_as_list):
         if row.startswith(("    * ",
                            "Share this with",
@@ -133,6 +140,7 @@ def _parse_body_text_from_text_version(text):
     # remove multiple space
     while "  " in text:
         text = text.replace("  ", " ")
+
 
     # replace prefix with more machine-readable form
     text = text.replace("pro-", "pro ")
@@ -205,11 +213,16 @@ def _debugfunc():
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.iltalehti.fi/viihdeuutiset/a/045cb810-1ffd-4641-84d7-4995953a9a4d"
-    text = parse_body_text_from_url(link)
+    # text = parse_body_text_from_url(link)
+    # teksti = _html_to_text(link)
+    html = _get_html_file(link)
+    text = _html_to_text(html)
+    text = _parse_body_text_from_text_version(text)
     print(text)
+    #print(text)
 
 
 
-# _debugfunc()
+_debugfunc()
 
 

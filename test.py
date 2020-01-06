@@ -215,6 +215,9 @@ class TextContainer:
                         print()
             print()
 
+            for index, chr in enumerate('"' + "".join(accumulator) + '"'):
+                    str += chr
+            return str
 
     def __init__(self, plaintext):
         # self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
