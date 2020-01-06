@@ -93,10 +93,10 @@ def _parse_body_text_from_text_version(text):
     # Add dots in bullet point case for previous sentences
     for idx,char in enumerate(text):
         if char == "*":
-            if text[idx-4] == "\\" and text[idx-3] == "n":
-                if text[idx-5] not in "?!.:;":
-                    text = text[:idx-4] + "." + text[idx-5:] 
-                    
+            if text[idx-3] == "\n":
+                # if text[idx-4] not in "?!.:;":
+                text = text[:idx-3] + "." + text[idx-4:] 
+
     for idx, row in enumerate(text_as_list):
         if row.startswith(("    * ",
                            "Share this with",
