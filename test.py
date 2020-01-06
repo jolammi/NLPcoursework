@@ -30,6 +30,7 @@ from stat_parser import Parser
 from parse_url_to_text import parse_body_text_from_url
 from text_files import long_text, short_text, pronoun_text
 import en_core_web_sm; nlp = en_core_web_sm.load() # second part is deemed import-like
+from name2gender import names
 
 # installation notes for libraries
 #
@@ -213,39 +214,7 @@ class TextContainer:
                     if index % 79 == 0 and index != 0:
                         print()
             print()
-        
-        def tmp_output(self):
-            """this will prettyprint give self with its known index information"""
-            
-            # upack information for easier looping
-            ne_starts = [start for start, stop in self.ne_indexes]
-            ne_stops = [stop for start, stop in self.ne_indexes]
-            noun_starts = [start for start, stop in self.noun_indexes]
-            noun_stops = [stop for start, stop in self.noun_indexes]
-            pronoun_starts = [start for start, stop in self.pronoun_indexes]
-            pronoun_stops = [stop for start, stop in self.pronoun_indexes]
-            propernoun_starts = [start for start, stop in self.propernoun_indexes]
-            propernoun_stops = [stop for start, stop in self.propernoun_indexes]
 
-            # self.ne_indexes          ◄─────────┐
-            # self.noun_indexes        ◄─────────┤
-            # self.pronoun_indexes  ►────────────┤  from pronoun to anything else
-            # self.propernoun_indexes  ◄─────────┘
-
-            accumulator = []
-            str = ""
-            for index, letter in enumerate(self.txt):
-                if (index in pronoun_starts) or (index in pronoun_stops):
-                    accumulator.append("▲") # this block finds and marks pronouns with up triangle
-                if index in ne_starts+ne_stops+propernoun_starts+propernoun_stops+noun_starts+noun_stops:
-                    accumulator.append("▼") # this block finds and marks the rest with down triangle
-                accumulator.append(letter)
-
-            for index, chr in enumerate('"' + "".join(accumulator) + '"'):
-                    str += chr
-                    if index % 79 == 0 and index != 0:
-                        str += "\n"
-            return str
 
     def __init__(self, plaintext):
         # self.plain_sentences = [token for token in nltk.tokenize.sent_tokenize(plaintext)]
@@ -349,20 +318,16 @@ def parse_coref(textcontainer, sentence_idx, word_idx):
         if goaltype == starttype:
             create connnection
     """
-
+    
+    
     pass
 
-def download_nltk_packages():
-    print( "\n\n---||| Downloading punkt package for nltk |||---\n\n")
-    nltk.download('punkt')
-    print( "\n\n---||| Downloading averaged_perception_tagger package for nltk |||---\n\n")
-    nltk.download('averaged_perceptron_tagger')
+
 
 
 
 
 if __name__ == "__main__":
-    download_nltk_packages()
     # source = pronoun_text
     # link = "https://www.bbc.com/news/world-asia-50723352"
     # link = "https://www.bbc.com/news/world-us-canada-50747374"
@@ -387,9 +352,9 @@ if __name__ == "__main__":
     
     parse_coref(wholetext, last_sentence, last_pronoun)
     
-    print(wholetext.sentences)
     
-    # seapie()
+    
+    seapie()
 
     
     # for index, sentence in enumerate(sentences):
