@@ -29,7 +29,6 @@ def click_ok(root):
 
     return url, browser_path
 
-
 def click_parse(root):
     global TEXT_FROM_URL
     b = tk.Label(root, text="Parsing, please wait...", font='Helvetica 14 bold')
@@ -63,7 +62,6 @@ root.resizable(False, False)
 # Labels
 #######
 tk.Label(root, text="URL").grid(row=0, column=0)
-tk.Label(root, text="Browser path").grid(row=1)
 tk.Label(root, text="Input text").grid(row=2)
 tk.Label(root, text="Output:").grid(row=5, padx=21, sticky=tk.W)
 tk.Label(root, text="Named entities (NLTK & spaCy)").grid(row=6)
@@ -73,9 +71,6 @@ tk.Label(root, text="Named entities (Neural coreference)").grid(row=8)
 #######
 entry_url = tk.Entry(root)
 entry_url.grid(row=0, column=1, ipadx=200, sticky=tk.W)
-
-entry_browserpath = tk.Entry(root)
-entry_browserpath.grid(row=1, column=1, ipadx=200, sticky=tk.W)
 
 entry_textinput = tkst.ScrolledText(root, wrap=tk.WORD, width=90, height=10)
 entry_textinput.grid(row=4, column=0, columnspan=3, sticky=tk.W + tk.E)
@@ -109,7 +104,6 @@ quit_button = tk.Button(root, text="Quit", width=15, command=root.quit).grid(
 parse_button = tk.Button(root, text="Parse", width=15, command=lambda: click_parse(root)).grid(
     row=15, column=1, sticky=tk.E, pady=4
 )
-
 
 ##############
 root.mainloop()
