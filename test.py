@@ -217,6 +217,7 @@ class TextContainer:
                     if index % 79 == 0 and index != 0:
                         print()
             print()
+            print()
 
 
         def tmp_output(self):
@@ -258,16 +259,15 @@ class TextContainer:
         # self.sentences = {index: TextContainer.SentenceContainer(sentence) for (index, sentence) in enumerate(self.plain_sentences)}
         self.sentences = [TextContainer.SentenceContainer(sentence) for sentence in nltk.tokenize.sent_tokenize(plaintext)]
 
+        # will hold tuples of six values
+        # 1. start sentence index
+        # 2. start sentence start character index
+        # 3. start sentence end character index
+        # 4. end sentence index
+        # 5. end sentence start character index
+        # 6. end sentence end character index
         self.connections = []
-        # from TextContainer index, from SentenceContainer index
-        # to TextContainer index, to SentenceContainer index
-        #
-        # from sentence and letter index to
-        # to sentence and letter index
-        # example: the word "He" should point to "Jouni" in the below sentence:
-        # "Jouni has a headache. He thusly ingested 50mg theanine and 200mg caffeine"
-        # this is saved as [ ... , ((1, 0), (0, 0)) , ...] which stands for
-        # pointing from first word of second sentence to first word of first sentence.
+
 
     @staticmethod
     def _get_pronoun_type(word):
@@ -399,6 +399,37 @@ class TextContainer:
                                     raise NestedLoopBreak
             except NestedLoopBreak:
                 continue
+                
+    def pprint_final(self):
+        # 1. start sentence index
+        # 2. start sentence start character index
+        # 3. start sentence end character index
+        # 4. end sentence index
+        # 5. end sentence start character index
+        # 6. end sentence end character index
+        
+        #self.connections = []
+        #    sentences
+        
+        
+        accumulator = []
+        for sentence_idx, sentence in enumerate(self.sentences):
+            for chr_index, letter in enumerate(sentence.txt):
+            
+                for sent_start, chr_start1, chr_end1, sent_end, chr_start2, chr_end2 in self.connections:
+                    
+                    if sentence_idx == sent_start:
+                        if chr_index == chr_end1:
+                            accumulator.append("(" + self.sentences[sent_end].txt[chr_start2:chr_end2].upper() + ")")
+            
+                accumulator.append(letter)
+        
+        print()
+        for index, chr in enumerate("".join(accumulator)):
+                print(chr, end="")
+                if index % 79 == 0 and index != 0:
+                    print()
+        print()
 
 
 
@@ -436,24 +467,9 @@ if __name__ == "__main__":
 
     wholetext.parse_corefs()
 
+    wholetext.pprint_final()
 
 
-    for (start_sent_idx,
-         start_sent_chr_start_idx,
-         start_sent_chr_end_idx,
-         end_sent_idx,
-         end_sent_chr_start_idx,
-         end_sent_chr_end_idx) in wholetext.connections:
-
-        print("========")
-        print(wholetext.sentences[start_sent_idx].txt, "@",
-            wholetext.sentences[start_sent_idx]
-            .txt[start_sent_chr_start_idx:start_sent_chr_end_idx])
-        print()
-        print(wholetext.sentences[end_sent_idx].txt, "@",
-            wholetext.sentences[end_sent_idx]
-            .txt[end_sent_chr_start_idx:end_sent_chr_end_idx])
-        print("========")
 
 
 
