@@ -58,19 +58,66 @@ A law that will set the EU "onto an irreversible path to climate neutrality" by 
 A plan to promote a more circular economy - a system designed to eliminate waste - that will address more sustainable products as well as a "farm to fork" strategy to improve the sustainability of food production and distribution
 Reacting to the proposals, Jagoda Munic, director of environmental group Friends of the Earth Europe, said they were "too small, too few and too far off", adding: "We're on a runaway train to ecological and climate collapse and the EU Commission is gently switching gears instead of slamming on the brakes."
 """
-
+from seapie import Seapie
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
+from nltk.chunk import conlltags2tree, tree2conlltags
+from pprint import pprint
+import spacy
+from spacy import displacy
+from collections import Counter
+import en_core_web_sm
+nlp = en_core_web_sm.load()
 
-def preprocess(sent):
-    sent = nltk.word_tokenize(sent)
-    sent = nltk.pos_tag(sent)
-    return sent
+doc = nlp(text)
 
-sent = preprocess(text)
 
-pattern = 'NP: {<DT>?<JJ>*<NN>}'
-cp = nltk.RegexpParser(pattern)
-cs = cp.parse(sent)
-print(cs)
+
+# print(cs)
+article = nlp(text)
+# iob_tagged = tree2conlltags(cs)
+# pprint(iob_tagged)
+l = []
+k = []
+for X in article:
+    # X = str(X)
+    # Seapie()
+    # if str(X)[0] in "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ":
+    #     k.append([(X, X.ent_type_) ])
+    print(f"{X.orth_}\t\tPOS: {X.pos_}\t\t NE type: {X.ent_type_}")
+
+# # string = " ".join([str(x) for x in article.sents])
+# # lista = [y for y in nlp(string))]
+# for x in article:
+#     if x.pos_ != "SPACE":
+#         l.append((x.orth_,x.pos_))
+#         print((x.orth_,x.pos_))
+
+# # for i in
+
+# print(len(k))
+# print(len(l))
+
+# from bs4 import BeautifulSoup
+# import requests
+# import re
+# def url_to_string(url):
+#     res = requests.get(url)
+#     html = res.text
+#     soup = BeautifulSoup(html, 'html5lib')
+#     for script in soup(["script", "style", 'aside']):
+#         script.extract()
+#     return " ".join(re.split(r'[\n\t]+', soup.get_text()))
+# # ny_bb = url_to_string('https://www.nytimes.com/2018/08/13/us/politics/peter-strzok-fired-fbi.html?hp&action=click&pgtype=Homepage&clickSource=story-heading&module=first-column-region&region=top-news&WT.nav=top-news')
+# # print(ny_bb)
+
+# len(article.ents)
+# sentences = [x for x in article.sents]
+# for i in range(len(sentences)):
+#     print([(str(x), x.label_,x.orth_,x.pos_, x.lemma_) for x in [y
+#                                         for y
+#                                         in nlp(str(sentences[i]))
+#                                         if not y.is_stop and y.pos_ != 'PUNCT']] + "\n")
+# displacy.render(nlp(str([x for x in article.sents][20])), jupyter=True, style='ent')
+
