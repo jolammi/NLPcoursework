@@ -186,7 +186,7 @@ class TextContainer:
                 for i in duplicates:
                     self.noun_indexes.remove(i)
 
-        def pprint(self):
+        def pprint_raw(self):
             """this will prettyprint give self with its known index information"""
 
             # upack information for easier looping
@@ -334,9 +334,7 @@ class TextContainer:
             for sent_idx, sentence in reversed(list(enumerate(self.sentences))):
                 for pron_idx, (start, end) in reversed(list(enumerate(sentence.pronoun_indexes))):
                     yield sent_idx, start, end, sentence.txt[start:end], TextContainer._get_pronoun_type(sentence.txt[start:end].lower())
-        
-        
-        
+
         for sent_idx, pron_start, pron_end, pron, pron_type in get_start_words():
             try:
                 if sent_idx == 0:
@@ -347,7 +345,6 @@ class TextContainer:
                     sent_window = [self.sentences[sent_idx-x] for x in range(2)]
                 else:
                     sent_window = [self.sentences[sent_idx-x] for x in range(3)]
-            
                 if pron_type in (2,3): # genderes male female
                     for window_idx, sent in enumerate(sent_window):
                         for idx, (ne, ne_type) in reversed(list(enumerate(sent.nes))):
@@ -359,75 +356,47 @@ class TextContainer:
                                     print("name not in database. guessing", ne)
                                     name_type = random.choice((2,3))
                                 if pron_type == name_type:
-                                    # tuple: start sent idx, start chr idx, end chr idx, end sent idx, start chr idx, end chr idx
+                                    if pron_start > sent.ne_indexes[idx][0]: # ensure we only look backwards in sentence. pron start is more than goal start
+                                        # tuple: start sent idx, start chr idx, end chr idx, end sent idx, start chr idx, end chr idx
+                                        self.connections.append((sent_idx,                      # start sentence idx
+                                                                 pron_start,                    # start sentence char start idx
+                                                                 pron_end,                      # start sentence char end idx
+                                                                 sent_idx-window_idx,           # end sentence idx
+                                                                 sent.ne_indexes[idx][0],   # end sentence char start idx
+                                                                 sent.ne_indexes[idx][1]))  # end sentence idx
+                                        raise NestedLoopBreak
+                elif pron_type == 1: # singulars
+                    for window_idx, sent in enumerate(sent_window):
+                        indexes = list(set(sent.noun_indexes + sent.propernoun_indexes)) # IMPORTANT this + operation gives higher priority to noun indexes
+                        for idx, (start, end) in reversed(list(enumerate(indexes))):
+                            word = sent.txt[start:end]
+                            word, tag = nltk.pos_tag([word])[0]
+                            if tag in ("NN", "NNP"): # type is one aka. singular
+                                if pron_start > start: # THIS LINE ENSURES WE ONLY ACCEPT _PREVIOUS_ WORDS
                                     self.connections.append((sent_idx,                      # start sentence idx
                                                              pron_start,                    # start sentence char start idx
                                                              pron_end,                      # start sentence char end idx
                                                              sent_idx-window_idx,           # end sentence idx
-                                                             sent.ne_indexes[idx][0],   # end sentence char start idx
-                                                             sent.ne_indexes[idx][1]))  # end sentence idx
+                                                             start,   # end sentence char start idx
+                                                             end))  # end sentence idx
                                     raise NestedLoopBreak
-                    
-                elif pron_type == 1: # singulars
+                elif pron_type == 4: # plurals
                     for window_idx, sent in enumerate(sent_window):
-                        indexes = list(set(sent.propernoun_indexes + sent.noun_indexes))
+                        indexes = list(set(sent.noun_indexes + sent.propernoun_indexes)) # IMPORTANT this + operation gives higher priority to noun indexes
                         for idx, (start, end) in reversed(list(enumerate(indexes))):
                             word = sent.txt[start:end]
-                            word, tag = nltk.pos_tag([word])
-                            if tag in ("NN", "NNS")
-                            seapie()
-                            
-                    
-                    # sent.propernoun_indexes + sent.noun_indexes
-                    # sent.noun_indexes
-                    # NN ja NNS singular
-                        
-                    
+                            word, tag = nltk.pos_tag([word])[0]
+                            if tag in ("NNS", "NNPS"): # type is one aka. singular
+                                if pron_start > start: # THIS LINE ENSURES WE ONLY ACCEPT _PREVIOUS_ WORDS
+                                    self.connections.append((sent_idx,                      # start sentence idx
+                                                             pron_start,                    # start sentence char start idx
+                                                             pron_end,                      # start sentence char end idx
+                                                             sent_idx-window_idx,           # end sentence idx
+                                                             start,   # end sentence char start idx
+                                                             end))  # end sentence idx
+                                    raise NestedLoopBreak
             except NestedLoopBreak:
                 continue
-                            
-
-        
-        # for i in reversed(range(len(self.sentences))): # reversed pointer over sentences
-            # prev_sents = [self.sentences[i+x] for x in range(3)] # change this val to look farther in in previous sentences. loop over 3 sentences with ranege3
-            # for sentence in prev_sents:
-                # txt = sentence.txt
-                # for p_start, p_end in sentence.pronoun_indexes:
-                    # pronoun = txt[p_start:p_end]
-                    # pronoun_type = TextContainer._get_pronoun_type(pronoun)
-                    # if pronoun_type in (2,3):
-                        # for idx, (ne, ne_type) in enumerate(sentence.nes):
-                            # if ne_type == "PERSON":
-                                # try:
-                                    # gender = names[ne.lower()]+1 # magix fix. mies on databasessa 1 kun pitäis olla 2 jotta pronomini lista toimii
-                                # except KeyError:
-                                    # print("name not in database. guessing", ne)
-                                    # gender = random.choice((2,3))
-                                    
-                                # if pronoun_type == gender: 
-                                    # ne_start, ne_stop = sentence.ne_indexes[idx]
-                                    # if p_start > ne_start:
-                                        # print()
-                                        # print(txt[ne_start:ne_stop], txt[p_start:p_end])
-                                        # print()
-                                        # input()
-                                        
-                                # # seapie()
-                            
-                            
-                # else:
-                    # print("pronoun types for other than male/female not implemented")
-                    # # raise NotImplementedError("pronoun types for other than male/female not implemented")
-           
-        
-        #print(self.sentences[i].txt)
-
-        
-
-
-
-def get_goal_type(word):
-    pass
 
 
 
@@ -451,8 +420,6 @@ if __name__ == "__main__":
 
     source = parse_body_text_from_url(link)
     
-    # DEBUG
-    # source = "Donald trump is so fucking tired his eyes are going to fall of his head"
     
     wholetext = TextContainer(source)
 
@@ -462,7 +429,7 @@ if __name__ == "__main__":
             exit()
         print("─"*80)
         print("SENTENCE INDEX:", index)
-        sentence.pprint()
+        sentence.pprint_raw()
 
 
     wholetext.parse_corefs()
