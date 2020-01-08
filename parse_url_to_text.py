@@ -73,7 +73,6 @@ def _html_to_text(html):
 
 
 def _parse_body_text_from_text_version(text):
-    print("jeeus on heera")
     """
     Takes the full text and removes clutter. Returns parsed text
     """
@@ -128,7 +127,6 @@ def _parse_body_text_from_text_version(text):
 
 
     text = "\n".join(text_as_list)
-    print("jeesus onherra2")
     to_replace = [
         ("Media caption", ""),
         # remove extra hashtags
@@ -175,12 +173,10 @@ def _parse_body_text_from_text_version(text):
     for (current, new) in to_replace:
         while current in text:
             text = text.replace(current,new)
-        print("jee")
 
     for (current, new) in to_replace:
         while current.lower() in text:
             text = text.replace(current.lower(),new.lower())
-        print("jee")
     return text
     # print(text_as_list)
 

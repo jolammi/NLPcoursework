@@ -319,7 +319,7 @@ class TextContainer:
         """argument indexes are for the word that you want to resolve the coref for
         returns goal sentence index and goal word index
         """
-        
+
         # these indexes can be assumed to be correct and they can be
         # assumed to correctly contain multiple words separated by spaces
         # so they are used as is and then tagged as needed
@@ -327,17 +327,17 @@ class TextContainer:
         # self.noun_indexes = []
         # self.pronoun_indexes = []
         # self.propernoun_indexes = []
-        
-        
-        def get_start_words():
+
+
+        def _get_start_words():
             """yields: sentence index, pronoun start chr index, pronoun end chr indx, pronoun, pronoun type"""
             for sent_idx, sentence in reversed(list(enumerate(self.sentences))):
                 for pron_idx, (start, end) in reversed(list(enumerate(sentence.pronoun_indexes))):
                     yield sent_idx, start, end, sentence.txt[start:end], TextContainer._get_pronoun_type(sentence.txt[start:end].lower())
-        
-        
-        
-        for sent_idx, pron_start, pron_end, pron, pron_type in get_start_words():
+
+
+
+        for sent_idx, pron_start, pron_end, pron, pron_type in _get_start_words():
             try:
                 if sent_idx == 0:
                     sent_window = [self.sentences[sent_idx]]
@@ -347,7 +347,7 @@ class TextContainer:
                     sent_window = [self.sentences[sent_idx-x] for x in range(2)]
                 else:
                     sent_window = [self.sentences[sent_idx-x] for x in range(3)]
-            
+
                 if pron_type in (2,3): # genderes male female
                     for window_idx, sent in enumerate(sent_window):
                         for idx, (ne, ne_type) in reversed(list(enumerate(sent.nes))):
@@ -367,27 +367,34 @@ class TextContainer:
                                                              sent.ne_indexes[idx][0],   # end sentence char start idx
                                                              sent.ne_indexes[idx][1]))  # end sentence idx
                                     raise NestedLoopBreak
-                    
+
                 elif pron_type == 1: # singulars
                     for window_idx, sent in enumerate(sent_window):
                         indexes = list(set(sent.propernoun_indexes + sent.noun_indexes))
                         for idx, (start, end) in reversed(list(enumerate(indexes))):
                             word = sent.txt[start:end]
-                            word, tag = nltk.pos_tag([word])
-                            if tag in ("NN", "NNS")
-                            seapie()
-                            
-                    
+                            word, tag = nltk.pos_tag([word])[0]
+                            # print(word, tag)
+                            # seapie()
+                            if tag in ("NNP"):
+                                print("matches NN or NNS:", word)
+                                # seapie()
+                                input()
+                                self.connections.append((sent_idx
+
+                                ))
+
+
                     # sent.propernoun_indexes + sent.noun_indexes
                     # sent.noun_indexes
                     # NN ja NNS singular
-                        
-                    
+
+
             except NestedLoopBreak:
                 continue
-                            
 
-        
+
+
         # for i in reversed(range(len(self.sentences))): # reversed pointer over sentences
             # prev_sents = [self.sentences[i+x] for x in range(3)] # change this val to look farther in in previous sentences. loop over 3 sentences with ranege3
             # for sentence in prev_sents:
@@ -403,26 +410,26 @@ class TextContainer:
                                 # except KeyError:
                                     # print("name not in database. guessing", ne)
                                     # gender = random.choice((2,3))
-                                    
-                                # if pronoun_type == gender: 
+
+                                # if pronoun_type == gender:
                                     # ne_start, ne_stop = sentence.ne_indexes[idx]
                                     # if p_start > ne_start:
                                         # print()
                                         # print(txt[ne_start:ne_stop], txt[p_start:p_end])
                                         # print()
                                         # input()
-                                        
+
                                 # # seapie()
-                            
-                            
+
+
                 # else:
                     # print("pronoun types for other than male/female not implemented")
                     # # raise NotImplementedError("pronoun types for other than male/female not implemented")
-           
-        
+
+
         #print(self.sentences[i].txt)
 
-        
+
 
 
 
@@ -450,10 +457,10 @@ if __name__ == "__main__":
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
 
     source = parse_body_text_from_url(link)
-    
+
     # DEBUG
     # source = "Donald trump is so fucking tired his eyes are going to fall of his head"
-    
+
     wholetext = TextContainer(source)
 
     for index, sentence in enumerate(wholetext.sentences):
@@ -466,16 +473,16 @@ if __name__ == "__main__":
 
 
     wholetext.parse_corefs()
-    
-    
-    
+
+
+
     for (start_sent_idx,
          start_sent_chr_start_idx,
          start_sent_chr_end_idx,
          end_sent_idx,
          end_sent_chr_start_idx,
          end_sent_chr_end_idx) in wholetext.connections:
-        
+
         print("========")
         print(wholetext.sentences[start_sent_idx].txt, "@",
             wholetext.sentences[start_sent_idx]
@@ -485,10 +492,10 @@ if __name__ == "__main__":
             wholetext.sentences[end_sent_idx]
             .txt[end_sent_chr_start_idx:end_sent_chr_end_idx])
         print("========")
-    
 
 
-    seapie()
+
+    # seapie()
 
 
     # for index, sentence in enumerate(sentences):
