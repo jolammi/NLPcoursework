@@ -39,12 +39,11 @@ def neural_coreference(text):
     text = text.split(" ")
     for idx, value in enumerate(text):
         for coreference_pair in coreferences_list:
-            # print(j)
+            # print(coreference_pair)
             if coreference_pair[1] in value:
                 text[idx] = text[idx]+f" ({coreference_pair[0]})"
     output = " ".join(text)
     return output
-
 # ------- comment before pushing, debug
 if __name__ == "__main__":
     link = "https://www.bbc.com/news/world-europe-50740324"

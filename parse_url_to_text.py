@@ -127,75 +127,56 @@ def _parse_body_text_from_text_version(text):
 
 
     text = "\n".join(text_as_list)
+    to_replace = [
+        ("Media caption", ""),
+        # remove extra hashtags
+        ("##", "#"),
+        # convert symbol to text. possible double space fixed later"
+        ("%", " percent "),
+        # remove multiple newlines to normal dot
+        ("\n\n", ". "),
+        # remove multiple dots resulting from previous operation
+        ("..", "."),
+        # replace newlines with spaces
+        ("\n", " "),
+        # remove multiple space
+        ("  ", " "),
+        # replace prefix with more machine-readable form
+        ("Pro-", "Pro "),
+        ("Anti-", "Anti "),
+        ("One-", "One "),
+        ("Two-", "Two "),
+        ("Three-", "Three "),
+        ("Four-", "Four "),
+        ("Five-", "Five "),
+        ("Six-", "Six "),
+        ("Seven-", "Seven "),
+        ("Eight-", "Eight "),
+        ("Nine-", "Nine "),
+        ("Ten-", "Ten "),
+        ("0km", "0 km"),
+        ("1km", "1 km"),
+        ("2km", "2 km"),
+        ("3km", "3 km"),
+        ("4km", "4 km"),
+        ("5km", "5 km"),
+        ("6km", "6 km"),
+        ("7km", "7 km"),
+        ("8km", "8 km"),
+        ("9km", "9 km"),
+        ("#", ""),
+        ("*", ""),
+        (" Media playback is unsupported on your device.", ""),
+        ("  ", " "),
+        (". .", "."),
+    ]
+    for (current, new) in to_replace:
+        while current in text:
+            text = text.replace(current,new)
 
-    # remove extra hashtags
-    while "##" in text:
-        text = text.replace("##", "#")
-
-    # convert symbol to text. possible double space fixed later
-    text = text.replace("%", " percent ")
-
-    # remove multiple newlines to normal dot
-    while "\n\n" in text:
-        text = text.replace("\n\n", ". ")
-
-    # remove multiple dots resulting from previous operation
-    while ".." in text:
-        text = text.replace("..", ".")
-
-    # replace newlines with spaces
-    while "\n" in text:
-        text = text.replace("\n", " ")
-
-    # remove multiple space
-    while "  " in text:
-        text = text.replace("  ", " ")
-
-
-    # replace prefix with more machine-readable form
-    text = text.replace("pro-", "pro ")
-    text = text.replace("anti-", "anti ")
-
-    text = text.replace("one-", "one ")
-    text = text.replace("two-", "two ")
-    text = text.replace("three-", "three ")
-    text = text.replace("four-", "four ")
-    text = text.replace("five-", "five ")
-    text = text.replace("six-", "six ")
-    text = text.replace("seven-", "seven ")
-    text = text.replace("eight-", "eight ")
-    text = text.replace("nine-", "nine ")
-    text = text.replace("ten-", "ten ")
-
-    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    for number in numbers:
-        if number+"km" in text:
-            text = text.replace(number+"km", number+" km")
-
-    text = text.replace("#", "")
-    text = text.replace("*", "")
-
-    #get rid of "Media playback is unsupported on your device."
-    while "Media playback is unsupported on your device." in text:
-        text = text.replace(
-            " Media playback is unsupported on your device.", ""
-        )
-
-    # get rid of "Media Caption" glued to other words
-    word = "Media caption"
-    idx = text.find(word)
-    end_index = idx + len(word)
-    if text[end_index] != " ":
-        text = text[:idx] + text[end_index:]
-
-
-    # remove multiple space
-    while "  " in text:
-        text = text.replace("  ", " ")
-
-    while ". ." in text:
-        text = text.replace(". .", ".")
-
+    for (current, new) in to_replace:
+        while current.lower() in text:
+            text = text.replace(current.lower(),new.lower())
     return text
     # print(text_as_list)
 

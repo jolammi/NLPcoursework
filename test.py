@@ -319,7 +319,7 @@ class TextContainer:
         """argument indexes are for the word that you want to resolve the coref for
         returns goal sentence index and goal word index
         """
-        
+
         # these indexes can be assumed to be correct and they can be
         # assumed to correctly contain multiple words separated by spaces
         # so they are used as is and then tagged as needed
@@ -327,15 +327,17 @@ class TextContainer:
         # self.noun_indexes = []
         # self.pronoun_indexes = []
         # self.propernoun_indexes = []
-        
-        
-        def get_start_words():
+
+
+        def _get_start_words():
             """yields: sentence index, pronoun start chr index, pronoun end chr indx, pronoun, pronoun type"""
             for sent_idx, sentence in reversed(list(enumerate(self.sentences))):
                 for pron_idx, (start, end) in reversed(list(enumerate(sentence.pronoun_indexes))):
                     yield sent_idx, start, end, sentence.txt[start:end], TextContainer._get_pronoun_type(sentence.txt[start:end].lower())
 
-        for sent_idx, pron_start, pron_end, pron, pron_type in get_start_words():
+
+
+        for sent_idx, pron_start, pron_end, pron, pron_type in _get_start_words():
             try:
                 if sent_idx == 0:
                     sent_window = [self.sentences[sent_idx]]
@@ -433,16 +435,16 @@ if __name__ == "__main__":
 
 
     wholetext.parse_corefs()
-    
-    
-    
+
+
+
     for (start_sent_idx,
          start_sent_chr_start_idx,
          start_sent_chr_end_idx,
          end_sent_idx,
          end_sent_chr_start_idx,
          end_sent_chr_end_idx) in wholetext.connections:
-        
+
         print("========")
         print(wholetext.sentences[start_sent_idx].txt, "@",
             wholetext.sentences[start_sent_idx]
@@ -452,10 +454,10 @@ if __name__ == "__main__":
             wholetext.sentences[end_sent_idx]
             .txt[end_sent_chr_start_idx:end_sent_chr_end_idx])
         print("========")
-    
 
 
-    seapie()
+
+    # seapie()
 
 
     # for index, sentence in enumerate(sentences):

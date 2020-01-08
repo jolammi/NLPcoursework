@@ -31,7 +31,11 @@ def click_ok(root):
 
 def click_parse(root):
     global TEXT_FROM_URL
-    b = tk.Label(root, text="Parsing, please wait...", font='Helvetica 14 bold')
+    b = tk.Label(
+        root,
+        text="Parsing, please wait...",
+        font='Helvetica 14 bold'
+    )
     b.grid(row=15)
     root.update_idletasks()
     str = ""
@@ -46,7 +50,9 @@ def click_parse(root):
     output_bs4_area.delete('1.0', tk.END)
     output_neuro_area.delete('1.0', tk.END)
     output_bs4_area.insert("insert",str)
-    output_neuro_area.insert("insert", neural_coreference(entry_textinput.get(1.0, tk.END)))
+    output_neuro_area.insert(
+        "insert", neural_coreference(entry_textinput.get(1.0, tk.END))
+    )
     b.grid_forget()
 
 
@@ -95,13 +101,15 @@ output_neuro_area.grid(row=10, columnspan=3, sticky=tk.W + tk.E)
 
 # Buttons
 ########
-ok_button = tk.Button(root, text="Ok", width=15, command=lambda: click_ok(root)).grid(
+ok_button = tk.Button(root, text="Ok", width=15,
+    command=lambda: click_ok(root)).grid(
     row=0, column=2, rowspan=2, sticky=tk.N + tk.S
 )
 quit_button = tk.Button(root, text="Quit", width=15, command=root.quit).grid(
     row=15, column=2, pady=4
 )
-parse_button = tk.Button(root, text="Parse", width=15, command=lambda: click_parse(root)).grid(
+parse_button = tk.Button(root, text="Parse", width=15,
+    command=lambda: click_parse(root)).grid(
     row=15, column=1, sticky=tk.E, pady=4
 )
 
