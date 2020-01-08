@@ -40,6 +40,7 @@ def neural_coreference(text):
     output += "\n"
     list_of_references = str(doc._.coref_clusters)
     list_of_references =  list_of_references.replace("],", "]\n")
+    list_of_references = list_of_references[1:-1]
     # Seapie()
     # list_of_references = "\n".join(list_of_references)
     output += list_of_references
