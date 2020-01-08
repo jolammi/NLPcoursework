@@ -18,16 +18,14 @@ def click_ok(root):
     root.update_idletasks()
     global TEXT_FROM_URL
     url = entry_url.get()
-    browser_path = entry_browserpath.get()
     TEXT_FROM_URL = parse_body_text_from_url(url)
 
     # print(url)
-    # print(browser_path)
     entry_textinput.delete('1.0', tk.END)
     entry_textinput.insert("insert", TEXT_FROM_URL)
     a.grid_forget()
 
-    return url, browser_path
+    return url
 
 def click_parse(root):
     global TEXT_FROM_URL
