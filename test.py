@@ -424,12 +424,15 @@ class TextContainer:
             
                 accumulator.append(letter)
         
+        
         print()
         for index, chr in enumerate("".join(accumulator)):
                 print(chr, end="")
                 if index % 79 == 0 and index != 0:
                     print()
         print()
+        
+        return "".join(accumulator)
 
 
 

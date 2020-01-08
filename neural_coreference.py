@@ -15,7 +15,6 @@
 
 import spacy
 import neuralcoref
-from seapie import Seapie
 
 from parse_url_to_text import parse_body_text_from_url
 
@@ -34,36 +33,23 @@ def neural_coreference(text):
     ##print(doc1._.coref_clusters)  ##All the clusters of corefering mentions in the doc
 
 
-    # coreferences_list = [[str(x) for x in i] for i in doc._.coref_clusters]
-    # coreferences_list = [[str(x) for x in i] for i in doc._.coref_resosolved]
-    output = doc._.coref_resolved
-    output += "\n"
-    list_of_references = str(doc._.coref_clusters)
-    list_of_references =  list_of_references.replace("],", "]\n")
-    # Seapie()
-    # list_of_references = "\n".join(list_of_references)
-    output += list_of_references
-    # print(output)
-
-    # Seapie()
-    # for l in coreferences_list:
-    #     print(" ".join(l))
+    coreferences_list = [[str(x) for x in i] for i in doc._.coref_clusters]
     # print(lista)
 
-    # text = text.split(" ")
-    # for idx, value in enumerate(text):
-    #     for coreference_pair in coreferences_list:
-    #         # print(coreference_pair)
-    #         if coreference_pair[1] in value:
-    #             text[idx] = text[idx]+f" ({coreference_pair[0]})"
-    # output = " ".join(text)
+    text = text.split(" ")
+    for idx, value in enumerate(text):
+        for coreference_pair in coreferences_list:
+            # print(coreference_pair)
+            if coreference_pair[1] in value:
+                text[idx] = text[idx]+f" ({coreference_pair[0]})"
+    output = " ".join(text)
     return output
 # ------- comment before pushing, debug
 if __name__ == "__main__":
     link = "https://www.bbc.com/news/world-europe-50740324"
     doc1 = parse_body_text_from_url(link)
     output = neural_coreference(doc1)
-    # print(output)
+    print(output)
 #doc1._.coref_clusters[1].mentions[-1].start
 # ///////// comment before pushing
 
