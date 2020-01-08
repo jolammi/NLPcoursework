@@ -43,6 +43,7 @@ def neural_coreference(text):
     list_of_references = list_of_references[1:-1]
     # Seapie()
     # list_of_references = "\n".join(list_of_references)
+    output += "\n------- Named entities and their reference pronouns -------\n\n"
     output += list_of_references
     # print(output)
 
