@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.scrolledtext as tkst
 from parse_url_to_text import parse_body_text_from_url
-from test import download_nltk_packages, TextContainer
+from parse_refs_from_text import download_nltk_packages, TextContainer
 from neural_coreference import neural_coreference
 import time
 
@@ -38,19 +38,24 @@ def click_parse(root):
     root.update_idletasks()
     str = ""
     wholetext = TextContainer(entry_textinput.get(1.0, tk.END))
-    for index, sentence in enumerate(wholetext.sentences):
-        if len(sentence.nes) != len(sentence.ne_indexes): # sanity check
-            print("index mismatch in sentence", index)
-            exit()
-        # print("─"*80)
-        # print("SENTENCE INDEX:", index)
-        str += sentence.tmp_output()
+    # for index, sentence in enumerate(wholetext.sentences):
+    #     if len(sentence.nes) != len(sentence.ne_indexes): # sanity check
+    #         print("index mismatch in sentence", index)
+    #         exit()
+    #     # print("─"*80)
+    #     # print("SENTENCE INDEX:", index)
+        # str += sentence.tmp_output()
+    wholetext.parse_corefs()
+    output_bs4 = wholetext.pprint_final()
+
     output_bs4_area.delete('1.0', tk.END)
     output_neuro_area.delete('1.0', tk.END)
-    output_bs4_area.insert("insert",str)
+
+    output_bs4_area.insert("insert",output_bs4)
     output_neuro_area.insert(
         "insert", neural_coreference(entry_textinput.get(1.0, tk.END))
     )
+
     b.grid_forget()
 
 

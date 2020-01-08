@@ -399,7 +399,7 @@ class TextContainer:
                                     raise NestedLoopBreak
             except NestedLoopBreak:
                 continue
-                
+
     def pprint_final(self):
         # 1. start sentence index
         # 2. start sentence start character index
@@ -407,31 +407,31 @@ class TextContainer:
         # 4. end sentence index
         # 5. end sentence start character index
         # 6. end sentence end character index
-        
+
         #self.connections = []
         #    sentences
-        
-        
+
+
         accumulator = []
         for sentence_idx, sentence in enumerate(self.sentences):
             for chr_index, letter in enumerate(sentence.txt):
-            
+
                 for sent_start, chr_start1, chr_end1, sent_end, chr_start2, chr_end2 in self.connections:
-                    
+
                     if sentence_idx == sent_start:
                         if chr_index == chr_end1:
                             accumulator.append("(" + self.sentences[sent_end].txt[chr_start2:chr_end2].upper() + ")")
-            
+
                 accumulator.append(letter)
-        
-        
+
+
         print()
         for index, chr in enumerate("".join(accumulator)):
                 print(chr, end="")
                 if index % 79 == 0 and index != 0:
                     print()
         print()
-        
+
         return "".join(accumulator)
 
 
@@ -455,8 +455,8 @@ if __name__ == "__main__":
     # link = "https://www.bbc.com/news/live/election-2019-50739883" # erittäin vaikea
 
     source = parse_body_text_from_url(link)
-    
-    
+
+
     wholetext = TextContainer(source)
 
     for index, sentence in enumerate(wholetext.sentences):
