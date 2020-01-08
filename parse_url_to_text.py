@@ -15,8 +15,6 @@ def _get_html_file(url):
         url = "https://" + url
     res = requests.get(url)
     html_page = res.text
-    # print(html_page)
-    # print(html_page)
     return html_page
 
 
@@ -25,46 +23,6 @@ def _html_to_text(html):
     Parses HTML page to text. Returns a string.
     """
 
-    # soup = BeautifulSoup(html, features="html.parser")
-    # # text = soup.find_all(text=True)
-    # blacklist = [
-    #     # "script",
-    #     # "style",
-    #     # "aside",
-    #     # "head",
-
-
-    #     '[document]',
-    #     'noscript',
-    #     'header',
-    #     # 'html',
-    #     'meta',
-    #     'head',
-    #     'input',
-    #     'script',
-    # ]
-    # for script in soup(blacklist):
-    #     script.extract()
-    # # print(soup)
-    # text = soup.get_text()
-
-    # text = ' '.join(text.split())
-    # text = text.replace("\t", " ")
-    # text = " ".join(re.split(r'[\n\t]+', text))
-    # article = nlp(text)
-
-    # ##labels = [x.label_ for x in article.ents]
-    # ##Counter(labels)
-
-    # ##items = [x.text for x in article.ents]
-    # ##Counter(items).most_common(3)
-
-    # sentences = [x.text for x in article.sents]
-    # output = "".join(str(sentences))
-    # return output
-
-    # TODO: parse
-    # <span class="off-screen">Media caption</span> out of tree
     h = html2text.HTML2Text()
     h.ignore_links = True
     h.ignore_images = True
@@ -85,19 +43,9 @@ def _parse_body_text_from_text_version(text):
         if "article share tools" in row.lower():
             text_as_list = text_as_list[:idx]
             break
-        # blacklist = [
-        #     "    * ",
-        #     "    * ",
-        # ]
 
     # Add dots in bullet point case for previous sentences
     text2 = text
-    # for idx,char in enumerate(text2):
-    #     if char == "*":
-    #         if text[idx-3] == "\n":
-    #             # if text[idx-4] not in "?!.:;":
-                # text = text[:idx-3] + "." + text[idx-3:]
-    #print(text_as_list[50])
     for idx in range(len(text_as_list)):
         try:
             #print(idx)
@@ -116,7 +64,6 @@ def _parse_body_text_from_text_version(text):
 
     for idx, row in enumerate(text_as_list):
         if row == text_as_list[idx-2] and row != " " and row != "":
-            # print(row)
             text_as_list = text_as_list[idx:]
             break
 
@@ -178,7 +125,6 @@ def _parse_body_text_from_text_version(text):
         while current.lower() in text:
             text = text.replace(current.lower(),new.lower())
     return text
-    # print(text_as_list)
 
 
 def parse_body_text_from_url(link):
@@ -204,13 +150,10 @@ def _debugfunc():
     # link = "https://www.bbc.com/news/world-asia-50741094"
     link = "https://www.bbc.com/news/world-europe-50740324"
     # link = "https://www.iltalehti.fi/viihdeuutiset/a/045cb810-1ffd-4641-84d7-4995953a9a4d"
-    # text = parse_body_text_from_url(link)
-    # teksti = _html_to_text(link)
     html = _get_html_file(link)
     text = _html_to_text(html)
     text = _parse_body_text_from_text_version(text)
     print(text)
-    #print(text)
 
 
 if __name__ == "__main__":
