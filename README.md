@@ -3,6 +3,15 @@ A repo for the course project on course 521158S Natural Language Processing and 
 
 It uses Python 3.7 and various libraries.
 
+## For the course organizer:
+The main file that spawns the UI is NLPcoursework/Named_entity_coreference_resolution.py . Please remember to install the packages listed in NLPcoursework/requirements.txt . You'll need the C++ build tools from https://visualstudio.microsoft.com/visual-cpp-build-tools/ -> Download Build Tools >  -> Build Tools for Visual Studio 2019 (see table 2 below.)
+
+<img src="./images/buildtools.png" width="800" height="430"/>
+
+Table 1: Build tools
+
+The NLPcourse
+
 ## Project assignment
 Project 8. Co-referencing Textual Analysis
 
@@ -18,8 +27,8 @@ Project 8. Co-referencing Textual Analysis
 
 4.  Consider the following features that you should implement in your program. The feature assigns a value for a pair of words (i, j) of the document.
 
+
     <img src="./images/table1.png" width="424" height="249"/>
-    table1
 
 
 5.  Implement a simple coreference resolution rule that says that if a word is a pronoun then finds the noun or named-entity of the same type (plural/singular, masculine/feminine situated on the same sentence of the pronoun but before the occurrence of the pronoun. If none is found on that sentence, then look to the previous sentence. If more than one name/named-entity matches the pronoun, then assign to the name/named-entity situated closest (in terms of number of words) to the pronoun. Make use of appropriate features in Table 1 for this reasoning.
