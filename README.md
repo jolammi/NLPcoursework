@@ -10,7 +10,7 @@ The main file that spawns the UI is NLPcoursework/Named_entity_coreference_resol
 
 Table 1: Build tools
 
-The NLPcourse
+The NLPcoursework folder includes all the most important files. Archive has some files that are no longer used but were beneficial at some point. Datadump folder includes files needed when the local database was created.
 
 ## Project assignment
 Project 8. Co-referencing Textual Analysis
