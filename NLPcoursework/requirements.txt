@@ -1,0 +1,11 @@
+# pyStatParser==0.0.1  # if fails: pip3 install https://github.com/emilmont/pyStatParser/archive/master.zip
+cython==0.29.14 #you will need c++ build tools from https://visualstudio.microsoft.com/visual-cpp-build-tools/
+spacy==2.1.6
+nltk==3.4.5
+# python -m spacy download en (after spacy is installed)
+beautifulsoup4==4.8.1
+numpy==1.17.2
+html2text==2019.9.26
+# pip3 install --upgrade setuptools
+#pip3 install https://github.com/huggingface/neuralcoref/archive/master.zip
+
