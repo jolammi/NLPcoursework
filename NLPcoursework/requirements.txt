@@ -4,7 +4,7 @@ spacy==2.1.6
 nltk==3.6.5
 # python -m spacy download en (after spacy is installed)
 beautifulsoup4==4.8.1
-numpy==1.17.2
+numpy==1.22.0
 html2text==2019.9.26
 # pip3 install --upgrade setuptools
 #pip3 install https://github.com/huggingface/neuralcoref/archive/master.zip
